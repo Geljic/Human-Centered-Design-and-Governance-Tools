@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HCD Data Synthesis Tool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <!-- mammoth.js for .docx text extraction (client-side, ~200KB) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+  <!-- marked.js + html-docx-js for .docx export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html-docx-js/0.3.1/html-docx.js"></script>
+  <link rel="stylesheet" href="../shared/navbar.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- ============================================================
+     SHARED NAVBAR
+============================================================ -->
+<nav class="hcd-navbar" role="navigation" aria-label="HCD Tools navigation">
+  <a class="hcd-navbar__brand" href="../index.html" title="HCD Tools Home">
+    <span class="hcd-navbar__brand-icon">🏠</span>
+    <span>HCD Tools</span>
+  </a>
+  <ul class="hcd-navbar__links">
+
+    <!-- HCD Tools -->
+    <li>
+      <button class="nav-group-btn active" type="button">
+        <span class="nav-icon">🔬</span> HCD Tools <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a href="../research-synthesiser/index.html" data-page="synthesiser">
+          <span class="nav-icon">🔬</span> Research Synthesiser
+        </a>
+        <a href="../data-synthesis/index.html" class="active" data-page="data-synthesis">
+          <span class="nav-icon">🧪</span> Data Synthesis
+        </a>
+        <a href="../persona-builder/index.html" data-page="persona">
+          <span class="nav-icon">🧑</span> Persona Builder
+        </a>
+        <a href="../ideation-scanner/index.html" data-page="ideation">
+          <span class="nav-icon">💡</span> Ideation Scanner
+        </a>
+        <div class="nav-dropdown__divider"></div>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🗺️</span> Journey Map <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">💼</span> Jobs to Be Done <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🖼️</span> Concept Posters <span class="nav-badge">Soon</span>
+        </a>
+      </div>
+    </li>
+
+    <!-- Project Management -->
+    <li>
+      <button class="nav-group-btn" type="button">
+        <span class="nav-icon">📋</span> Project Management <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a href="../project-charter/index.html" data-page="charter">
+          <span class="nav-icon">📋</span> Project Charter
+        </a>
+        <a href="../timeline-builder/index.html" data-page="timeline">
+          <span class="nav-icon">📅</span> Timeline Builder
+        </a>
+        <a href="../status-report/index.html" data-page="status-report">
+          <span class="nav-icon">📊</span> Status Report
+        </a>
+      </div>
+    </li>
+
+    <!-- Change Management -->
+    <li>
+      <button class="nav-group-btn" type="button">
+        <span class="nav-icon">📣</span> Change Management <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">📣</span> Change Impact Assessment <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🗓️</span> Engagement Planner <span class="nav-badge">Soon</span>
+        </a>
+      </div>
+    </li>
+
+    <!-- Business Analyst -->
+    <li>
+      <button class="nav-group-btn" type="button">
+        <span class="nav-icon">📐</span> Business Analyst <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">📐</span> Requirements Mapper <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🔄</span> Process Modeller <span class="nav-badge">Soon</span>
+        </a>
+      </div>
+    </li>
+
+  </ul>
+  <div class="hcd-navbar__right">
+    <span class="hcd-navbar__tag">HCD Tools</span>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<header>
+  <div>
+    <h1>Data Synthesis Tool <span class="privacy-badge">🔒 Via LiteLLM proxy</span></h1>
+    <p>HCD AI Tools — run a skill against a single meeting, transcript, or document</p>
+  </div>
+  <button id="settings-btn" onclick="openSettings()">⚙ Settings</button>
+</header>
+
+<!-- CORS WARNING (shown when opened as file://) -->
+<div id="cors-warning">
+  <strong>⚠ CORS notice:</strong> You've opened this file directly from your filesystem (<code>file://</code>).
+  If API calls or skill fetches fail, run it from a local server instead:
+  <code>python3 -m http.server 8080</code> then open <code>http://localhost:8080</code>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settings-modal">
+  <div class="modal">
+    <h2>⚙ Connection Settings</h2>
+    <p>Your settings are saved in this browser only — never in the HTML file.</p>
+    <div class="modal-note">
+      🔑 Enter your LiteLLM virtual key — it starts with <code>sk-</code>.
+      It enforces your weekly budget cap automatically.
+    </div>
+    <label for="proxy-url">LiteLLM Proxy URL</label>
+    <input type="url" id="proxy-url" placeholder="https://api.anthropic.com" />
+    <label for="api-key">Virtual Key</label>
+    <input type="password" id="api-key" placeholder="sk-..." autocomplete="off" />
+    <label for="model-name">Model <span style="font-weight:400;color:var(--grey-400)">(choose or type your own)</span></label>
+    <input type="text" id="model-name" placeholder="claude-sonnet-4-6" list="model-list" autocomplete="off" />
+    <datalist id="model-list">
+      <option value="claude-sonnet-4-6"></option>
+      <option value="claude-haiku-4-5-20251001"></option>
+      <option value="claude-opus-4-5-20251101"></option>
+      <option value="claude-opus-4-6"></option>
+      <option value="claude-opus-4-7"></option>
+      <option value="claude-sonnet-4-5-20250929"></option>
+      <option value="gemini-3-1-pro-preview"></option>
+      <option value="gemini-flash-2-5"></option>
+      <option value="gemini-pro-2-5"></option>
+    </datalist>
+    <label for="skills-url">Skills base URL <span style="font-weight:400;color:var(--grey-400)">(default: Geljic/doe-synthesis-skills on GitHub)</span></label>
+    <input type="url" id="skills-url" placeholder="https://raw.githubusercontent.com/Geljic/doe-synthesis-skills/main/skills" />
+    <label for="sharepoint-hint-input">SharePoint folder hint <span style="font-weight:400;color:var(--grey-400)">(shown next to Download)</span></label>
+    <textarea id="sharepoint-hint-input" placeholder="e.g. Save into Teams › Service Design › Synthesis › 2026-Q2/"></textarea>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeSettings()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveSettings()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+
+  <!-- LEFT: INPUT PANEL -->
+  <div class="panel">
+    <div class="panel-title">1 — Choose a skill</div>
+
+    <!-- Skill grid (rendered by JS) -->
+    <div id="skill-grid" class="skill-grid"></div>
+
+    <!-- Skill fetch warning -->
+    <div id="skill-warning"></div>
+
+    <!-- Custom prompt (shown only when Custom Prompt skill is selected) -->
+    <div id="custom-prompt-wrap" class="custom-prompt-wrap">
+      <label for="custom-prompt" style="display:block;font-size:0.82rem;font-weight:600;color:var(--grey-700);margin-bottom:0.3rem;">
+        Your system prompt <span style="color:var(--doe-red)">*</span>
+      </label>
+      <textarea
+        id="custom-prompt"
+        placeholder="Write your system prompt here. The tool will send this as the AI's instructions, followed by your source content…"
+        style="width:100%;min-height:140px;padding:0.55rem 0.75rem;border:1px solid var(--grey-300);border-radius:var(--radius-sm);font-size:0.82rem;font-family:inherit;resize:vertical;margin-bottom:0.75rem;"
+      ></textarea>
+    </div>
+
+    <div class="panel-title" style="margin-top:1.25rem;">2 — Add your content</div>
+
+    <!-- Common fields -->
+    <div class="field-row">
+      <div class="field">
+        <label>Session / Document date <span class="required">*</span></label>
+        <input type="date" id="session-date" />
+      </div>
+      <div class="field">
+        <label>Short name / slug <span class="required">*</span></label>
+        <input type="text" id="session-name" placeholder="e.g. team-kickoff" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label>De-identify speakers?</label>
+      <select id="deidentify">
+        <option value="no">No — keep names as-is</option>
+        <option value="yes">Yes — replace names with P1, P2, P3…</option>
+      </select>
+    </div>
+
+    <!-- File drop zone -->
+    <div class="field">
+      <label>Source files <span style="font-weight:400;color:var(--grey-400)">(.txt, .md, .vtt, .docx, .png, .jpg, .webp — multi-file OK)</span></label>
+      <div class="dropzone" id="dropzone" onclick="document.getElementById('file-input').click()">
+        <span class="dz-icon">📁</span>
+        <div class="dz-text">Drag files here or click to browse</div>
+        <div class="dz-hint">Files stay in your browser — never uploaded to a server</div>
+      </div>
+      <input type="file" id="file-input" multiple accept=".txt,.md,.vtt,.docx,.png,.jpg,.jpeg,.webp,.gif" style="display:none" onchange="handleFileInput(event)" />
+      <ul class="file-list" id="file-list"></ul>
+    </div>
+
+    <!-- Optional paste field -->
+    <div class="field">
+      <label>Or paste content here <span style="font-weight:400;color:var(--grey-400)">(combined with any uploaded files)</span></label>
+      <textarea id="transcript-text" placeholder="Paste text directly — useful for snippets that aren't in a file…"></textarea>
+    </div>
+
+    <div id="token-estimate">No content yet</div>
+
+    <button class="btn btn-primary" id="synthesise-btn" onclick="openDeIdModal()">
+      Review and Run
+    </button>
+    <div id="status"></div>
+
+    <div class="disclaimer">
+      ⚠ AI-generated output. Practitioner review is required before use in deliverables.
+      PII in transcripts is flagged for review — not auto-redacted.
+    </div>
+  </div>
+
+  <!-- RIGHT: OUTPUT PANEL -->
+  <div class="panel">
+    <div class="panel-title">3 — Review &amp; download output</div>
+    <div id="output-toolbar">
+      <button class="btn btn-success" onclick="downloadMd()" id="download-btn" disabled>⬇ Download as .md</button>
+      <button class="btn btn-success" onclick="downloadDocx()" id="download-docx-btn" disabled>⬇ Download as .docx</button>
+      <button class="btn btn-secondary" onclick="copyOutput()" id="copy-btn" disabled>📋 Copy</button>
+      <button class="btn btn-secondary" onclick="clearOutput()">✕ Clear</button>
+    </div>
+    <div id="output-area" class="empty">
+      Your output will appear here after you click Run…
+    </div>
+    <div id="sharepoint-hint">
+      <strong>📤 SharePoint:</strong> <span id="sharepoint-hint-text"></span>
+    </div>
+  </div>
+
+</main>
+
+<!-- ============================================================
+     DE-IDENTIFICATION MODAL
+============================================================ -->
+<div class="modal-overlay" id="deid-modal" style="display:none;align-items:flex-start;padding:24px;">
+  <div class="modal deid-modal-box">
+
+    <div class="deid-modal-header">
+      <div>
+        <h2>🔒 Remove personal information</h2>
+        <p>Review and edit your content before it is sent to AI. Use find and replace to remove names or other identifying details. All changes happen in your browser.</p>
+      </div>
+      <button class="btn btn-secondary deid-modal-close" onclick="closeDeIdModal()">Cancel</button>
+    </div>
+
+    <div class="deid-modal-body">
+
+      <!-- Left: editable combined text -->
+      <div class="deid-modal-preview">
+        <div class="deid-modal-label">Combined content — edit directly or use find and replace</div>
+        <textarea id="deid-modal-editor" class="deid-modal-editor" spellcheck="false"
+          oninput="onDeIdModalEditorInput(this.value)"
+          placeholder="Your content will appear here…"></textarea>
+      </div>
+
+      <!-- Right: find/replace + consent + actions -->
+      <div class="deid-modal-rules">
+        <div class="deid-modal-label">Find and replace</div>
+        <p class="deid-modal-hint">Matching is case-insensitive and whole-word.</p>
+
+        <div id="deid-modal-rules-list" class="deid-modal-rules-list"></div>
+
+        <button class="btn btn-secondary btn-sm" onclick="addDeIdModalRow()" style="margin-top:8px;">+ Add row</button>
+
+        <div class="deid-modal-privacy">
+          <span>🔒</span>
+          <span>Replacements happen in your browser only. The cleaned text is what gets sent to AI — your original files are never uploaded.</span>
+        </div>
+
+        <label class="deid-modal-consent">
+          <input type="checkbox" id="deid-modal-consent" onchange="onDeIdModalConsentChange()" />
+          <span>I confirm I have removed all personal information from the content above before sending to AI.</span>
+        </label>
+
+        <div class="deid-modal-actions">
+          <button class="btn btn-secondary" onclick="closeDeIdModal()">Cancel</button>
+          <button class="btn btn-primary" id="btn-deid-modal-run" onclick="applyDeIdAndRun()" disabled>Send to AI</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

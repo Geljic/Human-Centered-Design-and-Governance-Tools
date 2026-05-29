@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Timeline Builder — HCD Tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <!-- mammoth.js — client-side .docx text extraction -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+  <link rel="stylesheet" href="../shared/navbar.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- ============================================================
+     SHARED NAVBAR
+============================================================ -->
+<nav class="hcd-navbar" role="navigation" aria-label="HCD Tools navigation">
+  <a class="hcd-navbar__brand" href="../index.html" title="HCD Tools Home">
+    <span class="hcd-navbar__brand-icon">🏠</span>
+    <span>HCD Tools</span>
+  </a>
+  <ul class="hcd-navbar__links">
+
+    <!-- HCD Tools -->
+    <li>
+      <button class="nav-group-btn" type="button">
+        <span class="nav-icon">🔬</span> HCD Tools <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a href="../research-synthesiser/index.html" data-page="synthesiser">
+          <span class="nav-icon">🔬</span> Research Synthesiser
+        </a>
+        <a href="../data-synthesis/index.html" data-page="data-synthesis">
+          <span class="nav-icon">🧪</span> Data Synthesis
+        </a>
+        <a href="../persona-builder/index.html" data-page="persona">
+          <span class="nav-icon">🧑</span> Persona Builder
+        </a>
+        <a href="../ideation-scanner/index.html" data-page="ideation">
+          <span class="nav-icon">💡</span> Ideation Scanner
+        </a>
+        <div class="nav-dropdown__divider"></div>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🗺️</span> Journey Map <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">💼</span> Jobs to Be Done <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🖼️</span> Concept Posters <span class="nav-badge">Soon</span>
+        </a>
+      </div>
+    </li>
+
+    <!-- Project Management -->
+    <li>
+      <button class="nav-group-btn active" type="button">
+        <span class="nav-icon">📋</span> Project Management <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a href="../project-charter/index.html" data-page="charter">
+          <span class="nav-icon">📋</span> Project Charter
+        </a>
+        <a href="../timeline-builder/index.html" class="active" data-page="timeline">
+          <span class="nav-icon">📅</span> Timeline Builder
+        </a>
+        <a href="../status-report/index.html" data-page="status-report">
+          <span class="nav-icon">📊</span> Status Report
+        </a>
+      </div>
+    </li>
+
+    <!-- Change Management -->
+    <li>
+      <button class="nav-group-btn" type="button">
+        <span class="nav-icon">📣</span> Change Management <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">📣</span> Change Impact Assessment <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🗓️</span> Engagement Planner <span class="nav-badge">Soon</span>
+        </a>
+      </div>
+    </li>
+
+    <!-- Business Analyst -->
+    <li>
+      <button class="nav-group-btn" type="button">
+        <span class="nav-icon">📐</span> Business Analyst <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">📐</span> Requirements Mapper <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🔄</span> Process Modeller <span class="nav-badge">Soon</span>
+        </a>
+      </div>
+    </li>
+
+  </ul>
+  <div class="hcd-navbar__right">
+    <span class="hcd-navbar__tag">HCD Tools</span>
+  </div>
+</nav>
+
+<!-- ============================================================
+     WELCOME SCREEN
+============================================================ -->
+<div id="welcome-screen">
+
+  <!-- Hidden file input for loading a saved JSON -->
+  <input type="file" id="welcome-json-input" accept=".json" style="display:none"
+    onchange="welcomeJsonSelected(this.files[0]); this.value=''" />
+
+  <div class="welcome-inner">
+
+    <div class="welcome-brand">
+      <span class="welcome-brand-icon">📅</span>
+      <div class="welcome-brand-text">
+        <h2>Timeline Builder</h2>
+        <p>Service Design Tools · HCD</p>
+      </div>
+    </div>
+
+    <p class="welcome-prompt">How would you like to build this timeline?</p>
+
+    <div class="welcome-cards">
+
+      <button class="welcome-card welcome-card--ai" onclick="welcomeChooseAi()">
+        <span class="welcome-card-icon">✨</span>
+        <span class="welcome-card-title">Generate from plain text</span>
+        <span class="welcome-card-desc">Describe your tasks and dates in plain English and AI will convert them into a structured timeline ready to review and export.</span>
+        <span class="welcome-card-hint">Best when you have a list of tasks, owners, and rough dates</span>
+      </button>
+
+      <button class="welcome-card" onclick="welcomeChooseManual()">
+        <span class="welcome-card-icon">✏️</span>
+        <span class="welcome-card-title">Build manually</span>
+        <span class="welcome-card-desc">Start with a blank form and add swim lanes, bars, and milestones yourself. Quick-add chips make it fast to set up common lane types.</span>
+        <span class="welcome-card-hint">Good when you already know your swim lanes and dates</span>
+      </button>
+
+      <button class="welcome-card" onclick="welcomeChooseLoad()">
+        <span class="welcome-card-icon">📥</span>
+        <span class="welcome-card-title">Load a saved timeline</span>
+        <span class="welcome-card-desc">Import a JSON file exported from a previous session to continue editing or adapt an existing timeline for a new project.</span>
+        <span class="welcome-card-hint">You will need a JSON file exported from this tool</span>
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================
+     AI PROMPT SCREEN
+============================================================ -->
+<div id="ai-screen" style="display:none">
+  <div class="ai-screen-inner">
+
+    <div class="ai-screen-header">
+      <button class="tl-btn" onclick="backToWelcome()">← Back</button>
+      <div class="ai-screen-title">
+        <h2>✨ Generate timeline from plain text</h2>
+        <p>Describe your project tasks, swim lanes, and dates. AI will structure them into a timeline you can review and edit.</p>
+      </div>
+    </div>
+
+    <!-- API credentials (collapsed by default if already saved) -->
+    <div class="ai-creds-panel" id="ai-creds-panel">
+      <div class="ai-creds-toggle" onclick="toggleCredsPanel()">
+        <span id="ai-creds-status-icon">⚙️</span>
+        <span id="ai-creds-status-text">AI Settings</span>
+        <span class="ai-creds-chevron" id="ai-creds-chevron">▼</span>
+      </div>
+      <div class="ai-creds-body" id="ai-creds-body">
+        <div class="ai-creds-row">
+          <label>API Endpoint</label>
+          <input type="url" id="ai-endpoint" placeholder="https://api.anthropic.com" />
+        </div>
+        <div class="ai-creds-row">
+          <label>API Key</label>
+          <input type="password" id="ai-key" placeholder="sk-…" autocomplete="off" />
+        </div>
+        <div class="ai-creds-row ai-creds-row--model">
+          <label>Model</label>
+          <div class="ai-model-row">
+            <input type="text" id="ai-model" placeholder="claude-sonnet-4-6" />
+            <button class="tl-btn tl-btn--sm" id="ai-test-btn" onclick="testAndLoadModels()">Test Connection</button>
+          </div>
+        </div>
+        <div id="ai-model-list" class="ai-model-list"></div>
+        <div id="ai-conn-status" class="ai-conn-status"></div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:4px;">
+          <button class="tl-btn tl-btn--sm" onclick="saveAiCreds()">Save settings</button>
+          <span id="ai-creds-saved-msg" style="font-size:12px;color:var(--success);display:none">✓ Saved</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ai-body">
+
+      <div class="ai-input-panel">
+        <!-- Optional file upload -->
+        <label class="ai-panel-label">Upload a file <span class="ai-panel-optional">(optional — image, .docx, or .csv)</span></label>
+        <div class="tl-dropzone" id="tl-dropzone" onclick="document.getElementById('tl-file-input').click()">
+          <span class="tl-dz-icon">📎</span>
+          <div class="tl-dz-text">Drag a file here or click to browse</div>
+          <div class="tl-dz-hint">Supports .csv, .docx, .txt, .md, .png, .jpg, .webp — stays in your browser</div>
+        </div>
+        <input type="file" id="tl-file-input" accept=".csv,.txt,.md,.docx,.png,.jpg,.jpeg,.webp,.gif" style="display:none"
+          onchange="tlHandleFileInput(event)" />
+        <ul class="tl-file-list" id="tl-file-list"></ul>
+
+        <label class="ai-panel-label" style="margin-top:12px;">Your tasks and dates <span class="ai-panel-optional">(or describe here — combined with any file above)</span></label>
+        <p class="ai-panel-hint">Write in plain English — e.g. "Service Design runs from March to May. User Research starts mid-April and ends June. Go Live milestone in November."</p>
+        <textarea id="ai-text-input" class="ai-text-input" rows="8"
+          placeholder="e.g.&#10;Project: My Project — Implementation Timeline&#10;Date range: April 2026 to November 2026&#10;&#10;Service Design: March – May 2026&#10;User Research: April – June 2026&#10;Development: May – October 2026&#10;Go Live milestone: November 2026&#10;UAT: September – October 2026"></textarea>
+
+        <div class="ai-privacy-note">
+          <span>🔒</span>
+          <span>File content and text are sent to the AI gateway to generate the timeline structure. Do not include personal or sensitive information.</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="ai-screen-actions">
+      <button class="tl-btn" onclick="backToWelcome()">Cancel</button>
+      <button class="tl-btn tl-btn--primary" id="ai-generate-btn" onclick="runAiImport()">✨ Generate timeline</button>
+      <span id="ai-status-msg" class="ai-status-msg"></span>
+    </div>
+
+  </div>
+</div>
+
+<header class="page-header" id="page-header" style="display:none">
+  <div>
+    <h1>Timeline Builder</h1>
+    <p>Generate Gantt timeline PPTX slides</p>
+  </div>
+</header>
+
+<main id="main-app" style="display:none">
+
+  <!-- SLIDE DETAILS -->
+  <div class="form-section">
+    <h2>Slide Details</h2>
+    <div class="field-row">
+      <label>Title</label>
+      <input type="text" id="title" placeholder="e.g. Project Alpha — Implementation Timeline">
+    </div>
+    <div class="field-row">
+      <label>Subtitle</label>
+      <input type="text" id="subtitle" placeholder="e.g. Key milestones and delivery dates  ·  Go Live: DD Mon YYYY">
+    </div>
+    <div class="field-row">
+      <label>Endorsed badge</label>
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <div class="checkbox-wrap" style="padding-top:0;min-width:130px;">
+          <input type="checkbox" id="show-badge" checked>
+          <label for="show-badge">Show badge</label>
+        </div>
+        <textarea id="badge-text" rows="2" style="width:160px;min-height:44px;"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE SETTINGS -->
+  <div class="form-section">
+    <h2>Timeline Settings</h2>
+    <div class="field-row">
+      <label>Date range</label>
+      <div class="date-range">
+        <select id="start-month"></select>
+        <input type="number" id="start-year" value="2026" min="2024" max="2035">
+        <span>→</span>
+        <select id="end-month"></select>
+        <input type="number" id="end-year" value="2026" min="2024" max="2035">
+      </div>
+    </div>
+    <div class="field-row">
+      <label>"We are here"</label>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="checkbox-wrap" style="padding-top:0;">
+          <input type="checkbox" id="show-today" checked>
+          <label for="show-today">Show line</label>
+        </div>
+        <input type="date" id="today-date" style="flex:none;width:155px;">
+      </div>
+    </div>
+    <div class="field-row">
+      <label>Year bands</label>
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+        <div class="checkbox-wrap" style="padding-top:0;">
+          <input type="checkbox" id="show-year-bands">
+          <label for="show-year-bands">Show year labels above month header</label>
+        </div>
+        <span style="font-size:12px;color:var(--muted);">Useful when the timeline spans more than one calendar year</span>
+      </div>
+    </div>
+    <div class="field-row">
+      <label>Show weeks</label>
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+        <div class="checkbox-wrap" style="padding-top:0;">
+          <input type="checkbox" id="show-weeks">
+          <label for="show-weeks">Show w/c dates below month header</label>
+        </div>
+        <span style="font-size:12px;color:var(--muted);">Recommended for timelines ≤ 3 months</span>
+      </div>
+    </div>
+    <div class="field-row">
+      <label>Section label</label>
+      <input type="text" id="section-label" placeholder="e.g. Phase 1 — Discovery &amp; Design">
+    </div>
+    <div class="field-row">
+      <label>Go Live text</label>
+      <input type="text" id="golive-text" placeholder="e.g. Go Live: DD Mon YYYY">
+    </div>
+  </div>
+
+  <!-- ROWS -->
+  <div class="form-section">
+    <h2>Timeline Rows / Swim Lanes</h2>
+
+    <div class="quick-add-wrap">
+      <div class="quick-add-label">Quick add swim lane</div>
+      <div class="epic-chips">
+        <button type="button" class="epic-chip chip-sd"     onclick="quickAddRow('servicedesign')"><span class="dot" style="background:var(--c-sd)"></span>Service Design</button>
+        <button type="button" class="epic-chip chip-proto"  onclick="quickAddRow('prototype')"   ><span class="dot" style="background:var(--c-proto)"></span>Prototype / Content</button>
+        <button type="button" class="epic-chip chip-ur"     onclick="quickAddRow('userresearch')" ><span class="dot" style="background:var(--c-ur)"></span>User Research</button>
+        <button type="button" class="epic-chip chip-pas"    onclick="quickAddRow('pas')"          ><span class="dot" style="background:var(--c-pas)"></span>Actions</button>
+        <button type="button" class="epic-chip chip-dev"    onclick="quickAddRow('development')"  ><span class="dot" style="background:var(--c-dev)"></span>Development</button>
+        <button type="button" class="epic-chip chip-change" onclick="quickAddRow('change')"       ><span class="dot" style="background:var(--c-change)"></span>Change &amp; Comms</button>
+        <button type="button" class="epic-chip chip-live"   onclick="quickAddRow('golive')"       ><span class="dot" style="background:var(--c-live)"></span>Go Live</button>
+        <button type="button" class="epic-chip chip-care"   onclick="quickAddRow('hypercare')"    ><span class="dot" style="background:var(--c-care)"></span>Hyper Care</button>
+        <button type="button" class="epic-chip" style="border-color:var(--border);color:var(--muted);" onclick="addRow()">+ Custom row</button>
+      </div>
+    </div>
+
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">Only add the swim lanes relevant to your project — not every project needs every epic.</p>
+
+    <div id="rows-container"></div>
+    <button type="button" class="btn-add-row" onclick="addRow()">+ Add custom row</button>
+  </div>
+
+  <!-- TYPE EDITOR (editable legend / bar type reference) -->
+  <div class="form-section">
+    <h2>Bar Type Reference <span class="section-hint">— edit names and colours used in the PPTX legend</span></h2>
+    <div id="type-editor-grid" class="type-editor-grid"></div>
+  </div>
+
+  <!-- PREVIEW -->
+  <div class="form-section">
+    <h2>Timeline Preview <span class="section-hint" id="overflow-hint"></span></h2>
+    <div class="preview-controls">
+      <label class="preview-toggle">
+        <input type="checkbox" id="auto-scale" checked>
+        <span>Shrink bars to fit overflow</span>
+        <em>Turn off if bars become too small</em>
+      </label>
+      <label class="preview-toggle">
+        <input type="checkbox" id="label-below" checked>
+        <span>Show full label below bar when text doesn't fit</span>
+      </label>
+    </div>
+    <div class="preview-wrap">
+      <svg id="preview-svg" viewBox="0 0 13.33 7.5" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;border-radius:4px;"></svg>
+    </div>
+  </div>
+
+  <!-- SAVE / LOAD -->
+  <div class="generate-section" style="margin-bottom:10px;">
+    <div style="display:flex;flex-direction:column;gap:4px;">
+      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--muted);">Save / Load</span>
+      <span style="font-size:12px;color:var(--muted);">Save your work as a JSON file and reload it later — nothing is stored in the browser.</span>
+    </div>
+    <div style="display:flex;gap:10px;margin-left:auto;margin-top:8px;">
+      <button type="button" class="btn-save-load" onclick="saveTimeline()">💾 Save</button>
+      <label class="btn-save-load btn-load-label">
+        📂 Load
+        <input type="file" id="load-input" accept=".json" onchange="loadTimeline(event)" style="display:none;">
+      </label>
+    </div>
+  </div>
+
+  <!-- GENERATE -->
+  <div class="generate-section">
+    <div id="overflow-warn" class="overflow-warn-box"></div>
+    <div class="generate-actions">
+      <button type="button" id="generate-btn" onclick="generatePPTX()">⬇ Generate PPTX</button>
+      <button type="button" class="btn-save-load" onclick="exportJiraCSV()" style="font-size:14px;padding:10px 20px;">⬇ Export Jira CSV</button>
+      <span id="status-msg"></span>
+    </div>
+  </div>
+
+</main>
+
+<!-- PptxGenJS — vendored locally so the tool works offline -->
+<script src="lib/pptxgen.bundle.js"></script>
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

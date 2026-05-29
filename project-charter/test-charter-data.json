@@ -1,0 +1,201 @@
+{
+  "projectName": "HCD AI Pilot",
+  "projectCode": "AI-PILOT",
+  "version": "0.1 Draft",
+  "status": "Draft",
+  "authors": "Jane Smith",
+  "date": "2026-05-01",
+  "orgUnit": "Example Org Unit",
+  "program": "Example Programme",
+  "projectSponsorName": "Alex Johnson",
+  "projectSponsorRole": "Director - Example Org Unit",
+  "execSponsors": [
+    {
+      "name": "",
+      "role": ""
+    }
+  ],
+  "projectTeam": [
+    {
+      "name": "Priya Patel",
+      "role": "Agile Squads Manager"
+    },
+    {
+      "name": "Chris Taylor",
+      "role": "Service Design Manager"
+    },
+    {
+      "name": "Jane Smith",
+      "role": "Iteration Manager"
+    },
+    {
+      "name": "Sam Lee",
+      "role": "UX Designer"
+    },
+    {
+      "name": "Morgan Reed",
+      "role": "Lead Service Designer"
+    }
+  ],
+  "sponsorTeam": [
+    {
+      "name": "Alex Johnson",
+      "role": "Director - Example Org Unit"
+    }
+  ],
+  "problemRaw": "The Service Design team are running an AI pilot program using LiteLLM and VS Code to implement agentic AI practices into HCD phases and general activities for Service Design team members. The aim is to create tools for inputs and outputs such as synthesis, deliverable artefacts, status reports, BRD's etc",
+  "whoAffected": "Service Design team directly",
+  "painPoints": "Large synthesis of meeting transcripts, themes, pain points, oppurtunities.\nCreating journey maps. defining current and future state in a timeely manner. \nAllows project team to focus on engagements and stakeholder management",
+  "evidence": "HCD best practice: link solutions to evidence. Include data, research findings, or user feedback.\n\nOne outcome of this project is to produce a use case and examples of how AI supports our worflows and efficiency ",
+  "problemStatement": "The Service Design team spends significant time on manual, repetitive tasks such as synthesising meeting transcripts, developing journey maps, and producing project artefacts, reducing the capacity available for direct stakeholder engagement and high-value design work. An AI pilot program is being established to integrate agentic AI tools into HCD workflows, enabling faster, evidence-linked outputs across key deliverables. The pilot will generate practical use cases demonstrating how AI can improve team efficiency and support better practice across the service design and change function.",
+  "hmwQuestion": "How might we reduce the time Service Design team members spend on repetitive synthesis and documentation tasks so they can focus more on stakeholder engagement and design work",
+  "strategicContext": "",
+  "relevantPolicy": "",
+  "strategicObjective": "This project aims to improve the efficiency of the Service Design team by embedding AI-assisted tools into everyday HCD workflows, reducing the time spent on manual synthesis and documentation. By freeing up team capacity, Service Design practitioners will be better positioned to focus on direct stakeholder engagement, design quality, and evidence-based decision-making. The pilot will produce a set of validated use cases that demonstrate measurable efficiency gains, providing a foundation for broader adoption of AI-supported practices across the department.",
+  "programMeasures": [
+    "A set of documented AI use cases specific to Service Design workflows (e.g. transcript synthesis, journey mapping, artefact drafting). A working AI toolset integrated into the team's existing environment (LiteLLM/VS Code). A pilot evaluation report with findings and recommendations for broader adoption"
+  ],
+  "projectMeasures": [
+    "Service Design team members spend less time on manual synthesis and documentation tasks, with that time redirected to stakeholder engagement and design activity. The team has a repeatable, evidence-backed approach to using AI within HCD workflows that can be shared across the directorate."
+  ],
+  "baselines": [
+    {
+      "metric": "Time to synthesise a typical engagement transcript",
+      "value": ""
+    },
+    {
+      "metric": "Time to produce a first-draft journey map",
+      "value": ""
+    },
+    {
+      "metric": "Proportion of project time spent on documentation vs. engagement",
+      "value": ""
+    },
+    {
+      "metric": "AI tooling in use across HCD",
+      "value": ""
+    }
+  ],
+  "targets": [
+    {
+      "metric": "Transcript synthesis time",
+      "value": ""
+    },
+    {
+      "metric": "First-draft artefact turnaround",
+      "value": ""
+    },
+    {
+      "metric": "Team-reported capacity for stakeholder work",
+      "value": ""
+    },
+    {
+      "metric": "Validated use cases documented",
+      "value": ""
+    }
+  ],
+  "measurementMethod": "Success will be assessed through a mix of time tracking (before/after task estimates), team self-assessment surveys at pilot start and end, and a review of artefact quality by the Service Design Manager. Use cases will be assessed against an agreed quality rubric. The pilot evaluation report will serve as the primary accountability artefact, reviewed by the sponsor at project close.",
+  "inScope": [
+    "AI-assisted synthesis of meeting transcripts and engagement notes",
+    "AI-supported drafting of HCD artefacts (journey maps, current/future state, themes, pain points, opportunities)",
+    "AI-assisted production of project documents (status reports, BRDs, charter sections)",
+    "Integration of AI tooling into the Service Design team's existing environment (LiteLLM, VS Code)",
+    "Documentation of validated use cases from the pilot",
+    "Pilot evaluation report with findings and recommendations"
+  ],
+  "outScope": [
+    "Procurement or deployment of new enterprise AI platforms (this is a pilot using existing tooling)",
+    "AI tooling rollout to teams outside Service Design during the pilot period",
+    "Automation of stakeholder engagement or facilitation activities",
+    "Integration with DoE enterprise systems (e.g. SAP, Service Now) unless separately approved",
+    "Development of AI governance policy for the department (findings may inform this, but it is not a deliverable of this project)",
+    "Replacement of human judgement in design decisions — AI outputs are inputs to, not substitutes for, practitioner review"
+  ],
+  "contingencies": [
+    ""
+  ],
+  "risks": [
+    {
+      "risk": "AI-generated outputs are low quality or require significant rework, negating efficiency gains",
+      "mitigation": "Establish a quality review step in each use case; set clear acceptance criteria before pilot starts",
+      "rating": "Medium"
+    },
+    {
+      "risk": "Pilot scope creeps as team identifies additional use cases mid-flight",
+      "mitigation": "Lock scope at charter sign-off; log new ideas in a backlog for post-pilot consideration",
+      "rating": "Medium"
+    },
+    {
+      "risk": "AI outputs contain errors that make it into deliverables without detection",
+      "mitigation": "Mandate practitioner review of all AI-assisted outputs; include this as a non-negotiable pilot principle",
+      "rating": "High"
+    },
+    {
+      "risk": "Data privacy or information security concerns arise from inputting sensitive engagement data into AI tools",
+      "mitigation": "Confirm acceptable data handling with DoE ICT/Security before pilot commences; use de-identified inputs where possible",
+      "rating": "High"
+    }
+  ],
+  "phases": [
+    {
+      "phase": "Project Planning",
+      "start": "04 May 2026",
+      "end": "11 May 2026",
+      "duration": "2 weeks"
+    },
+    {
+      "phase": "Solution Architecture",
+      "start": "11 May 2026",
+      "end": "25 May 2026",
+      "duration": "2 weeks"
+    },
+    {
+      "phase": "Workflow Creation & Pilot Documentation",
+      "start": "11 May 2026",
+      "end": "03 Jul 2026",
+      "duration": "8 weeks"
+    }
+  ],
+  "milestones": [
+    {
+      "milestone": "Project plan endorsed",
+      "date": "14 May 2026"
+    },
+    {
+      "milestone": "Ready for workflow creation",
+      "date": "25 May 2026"
+    },
+    {
+      "milestone": "Service Design Checkpoint Showcase (Placeholder)",
+      "date": "28 May 2026"
+    },
+    {
+      "milestone": "Final Pilot Showcase",
+      "date": "06 Jul 2026"
+    },
+    {
+      "milestone": "Project Closes",
+      "date": "03 Jul 2026"
+    }
+  ],
+  "dependencies": [
+    ""
+  ],
+  "stakeholders": [
+    {
+      "name": "",
+      "interest": "",
+      "influence": "Medium"
+    }
+  ],
+  "researchApproach": "",
+  "userGroups": [
+    ""
+  ],
+  "userGroupsText": "",
+  "accessibilityReqs": "",
+  "privacyNotes": "",
+  "definitionOfDone": "",
+  "waysOfWorking": "",
+  "governanceNotes": ""
+}

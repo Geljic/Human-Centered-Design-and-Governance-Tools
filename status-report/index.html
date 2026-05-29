@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weekly Status Report — HCD Tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../shared/navbar.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- ============================================================
+     SHARED NAVBAR
+============================================================ -->
+<nav class="hcd-navbar" role="navigation" aria-label="HCD Tools navigation">
+  <a class="hcd-navbar__brand" href="../index.html" title="HCD Tools Home">
+    <span class="hcd-navbar__brand-icon">🏠</span>
+    <span>HCD Tools</span>
+  </a>
+  <ul class="hcd-navbar__links">
+
+    <!-- HCD Tools -->
+    <li>
+      <button class="nav-group-btn" type="button">
+        <span class="nav-icon">🔬</span> HCD Tools <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a href="../research-synthesiser/index.html" data-page="synthesiser">
+          <span class="nav-icon">🔬</span> Research Synthesiser
+        </a>
+        <a href="../data-synthesis/index.html" data-page="data-synthesis">
+          <span class="nav-icon">🧪</span> Data Synthesis
+        </a>
+        <a href="../persona-builder/index.html" data-page="persona">
+          <span class="nav-icon">🧑</span> Persona Builder
+        </a>
+        <a href="../ideation-scanner/index.html" data-page="ideation">
+          <span class="nav-icon">💡</span> Ideation Scanner
+        </a>
+        <div class="nav-dropdown__divider"></div>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🗺️</span> Journey Map <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">💼</span> Jobs to Be Done <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🖼️</span> Concept Posters <span class="nav-badge">Soon</span>
+        </a>
+      </div>
+    </li>
+
+    <!-- Project Management -->
+    <li>
+      <button class="nav-group-btn active" type="button">
+        <span class="nav-icon">📋</span> Project Management <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a href="../project-charter/index.html" data-page="charter">
+          <span class="nav-icon">📋</span> Project Charter
+        </a>
+        <a href="../timeline-builder/index.html" data-page="timeline">
+          <span class="nav-icon">📅</span> Timeline Builder
+        </a>
+        <a href="../status-report/index.html" class="active" data-page="status-report">
+          <span class="nav-icon">📊</span> Status Report
+        </a>
+      </div>
+    </li>
+
+    <!-- Change Management -->
+    <li>
+      <button class="nav-group-btn" type="button">
+        <span class="nav-icon">📣</span> Change Management <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">📣</span> Change Impact Assessment <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🗓️</span> Engagement Planner <span class="nav-badge">Soon</span>
+        </a>
+      </div>
+    </li>
+
+    <!-- Business Analyst -->
+    <li>
+      <button class="nav-group-btn" type="button">
+        <span class="nav-icon">📐</span> Business Analyst <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">📐</span> Requirements Mapper <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🔄</span> Process Modeller <span class="nav-badge">Soon</span>
+        </a>
+      </div>
+    </li>
+
+  </ul>
+  <div class="hcd-navbar__right">
+    <span class="hcd-navbar__tag">HCD Tools</span>
+  </div>
+</nav>
+
+<!-- ============================================================
+     TOAST
+============================================================ -->
+<div id="toast"></div>
+
+<!-- ============================================================
+     WELCOME / SPLASH SCREEN
+============================================================ -->
+<div id="welcome-screen">
+
+  <!-- Hidden file input for JSON load card -->
+  <input type="file" id="welcome-json-input" accept=".json" style="display:none"
+    onchange="welcomeJsonSelected(this.files[0]); this.value=''" />
+
+  <div class="welcome-inner">
+
+    <div class="welcome-brand">
+      <span class="welcome-brand-icon">📊</span>
+      <div class="welcome-brand-text">
+        <h2>Weekly Status Report</h2>
+        <p>HCD Tools</p>
+      </div>
+    </div>
+
+    <p class="welcome-prompt">How would you like to build this week's report?</p>
+
+    <!-- ── THREE ENTRY CARDS ─────────────────────────────── -->
+    <div class="welcome-cards">
+
+      <!-- Card 1: AI from free text -->
+      <button class="welcome-card welcome-card--ai" onclick="welcomeChooseAi()">
+        <span class="welcome-card-icon">✨</span>
+        <span class="welcome-card-title">Generate from notes</span>
+        <span class="welcome-card-desc">Paste or type your tasks and dates in plain English. AI will identify what happened this week and what's planned next, then populate the work streams for you.</span>
+        <span class="welcome-card-hint">Best when you have meeting notes, a to-do list, or a quick brain-dump ready</span>
+      </button>
+
+      <!-- Card 2: Manual -->
+      <button class="welcome-card" onclick="welcomeChooseManual()">
+        <span class="welcome-card-icon">✏️</span>
+        <span class="welcome-card-title">Build manually</span>
+        <span class="welcome-card-desc">Start with a blank form and fill in each work stream yourself. AI is still available to help with individual fields at any point.</span>
+        <span class="welcome-card-hint">Good when you already know the content and just need the slide</span>
+      </button>
+
+      <!-- Card 3: Load JSON -->
+      <button class="welcome-card" onclick="document.getElementById('welcome-json-input').click()">
+        <span class="welcome-card-icon">📥</span>
+        <span class="welcome-card-title">Load a saved report</span>
+        <span class="welcome-card-desc">Import a JSON file from a previous session to update last week's report, or adapt it for a new week.</span>
+        <span class="welcome-card-hint">You will need a JSON file exported from this tool</span>
+      </button>
+
+    </div>
+
+    <!-- ── AI PROMPT PANEL (shown when card 1 is chosen) ── -->
+    <div id="ai-prompt-panel" style="display:none">
+
+      <!-- Hidden file inputs -->
+      <input type="file" id="ai-notes-file-input" accept=".txt,.md" style="display:none"
+        onchange="aiLoadNotesFile(this.files[0]); this.value=''" />
+      <input type="file" id="ai-prev-json-input" accept=".json" style="display:none"
+        onchange="aiLoadPrevJson(this.files[0]); this.value=''" />
+
+      <div class="ai-prompt-header">
+        <button class="btn-back" onclick="hideAiPanel()">← Back</button>
+        <h3>✨ Generate from notes</h3>
+      </div>
+
+      <!-- API not configured warning -->
+      <div id="ai-creds-warn" class="ai-creds-warn" style="display:none">
+        <span>⚠️ AI not configured.</span>
+        <button class="btn-link" onclick="showAiSetup()">Set up API credentials →</button>
+      </div>
+
+      <div class="ai-prompt-body">
+
+        <!-- Upload row -->
+        <div class="ai-upload-row">
+          <div class="ai-upload-slot">
+            <div class="ai-upload-slot-label">📄 Notes file <span class="ai-upload-optional">(optional)</span></div>
+            <button class="ai-upload-btn" onclick="document.getElementById('ai-notes-file-input').click()">
+              Upload .txt / .md
+            </button>
+            <span id="ai-notes-file-name" class="ai-upload-filename"></span>
+          </div>
+          <div class="ai-upload-slot">
+            <div class="ai-upload-slot-label">📊 Previous week's report <span class="ai-upload-optional">(optional)</span></div>
+            <button class="ai-upload-btn" onclick="document.getElementById('ai-prev-json-input').click()">
+              Upload .json
+            </button>
+            <span id="ai-prev-json-name" class="ai-upload-filename"></span>
+          </div>
+        </div>
+        <p class="ai-upload-hint">Upload a notes file to auto-fill the text box below, or a previous week's JSON to give AI the existing stream structure to update.</p>
+
+        <label class="ai-prompt-label" for="ai-notes-input">
+          Paste or type your tasks and dates below. AI will identify what happened this week and what's planned for next week, then populate the work streams.
+        </label>
+        <textarea
+          id="ai-notes-input"
+          class="ai-notes-textarea"
+          rows="10"
+          placeholder="e.g.
+This week:
+- Completed stakeholder interviews for Solution 1 (Mon 26 May)
+- Drafted change comms plan — shared with team Thursday
+- UAT testing started for digital walkthrough, some issues found with login flow (amber)
+
+Next week:
+- Finalise research synthesis report
+- Fix UAT login bug and retest
+- Steering committee prep — need director sign-off on go-live date
+- Change comms plan to be endorsed by Friday
+
+Project: My Project"></textarea>
+
+        <div class="ai-prompt-actions">
+          <button class="btn btn-primary" id="btn-ai-generate" onclick="runAiGenerate()">
+            ✨ Generate report
+          </button>
+          <span class="ai-prompt-hint">AI will draft the streams — you can review and edit everything before exporting.</span>
+        </div>
+
+        <div id="ai-generating-indicator" class="ai-generating" style="display:none">
+          <div class="ai-spinner"></div>
+          <span>AI is analysing your notes…</span>
+        </div>
+      </div>
+
+      <!-- AI Setup (collapsible) -->
+      <details id="ai-setup-details" class="ai-setup-details">
+        <summary>⚙️ AI Setup (API credentials)</summary>
+        <div class="ai-setup-body">
+          <p class="ai-setup-hint">Configure your Claude API credentials. These are saved in your browser only.</p>
+
+          <div class="ai-setup-field">
+            <label>API Endpoint URL</label>
+            <input type="url" id="sr-ai-endpoint" class="ai-setup-input"
+              placeholder="https://api.anthropic.com"
+              oninput="srSaveApiCredentials(this.value, srGetApiKey(), srGetModel())" />
+          </div>
+
+          <div class="ai-setup-field">
+            <label>API Key</label>
+            <input type="password" id="sr-ai-key" class="ai-setup-input"
+              placeholder="sk-…"
+              oninput="srSaveApiCredentials(srGetEndpoint(), this.value, srGetModel())" />
+          </div>
+
+          <div class="ai-setup-field">
+            <label>Model</label>
+            <div class="ai-setup-model-row">
+              <input type="text" id="sr-ai-model" class="ai-setup-input"
+                placeholder="claude-sonnet-4-6"
+                oninput="srSaveApiCredentials(srGetEndpoint(), srGetApiKey(), this.value)" />
+              <button class="btn btn-ghost btn-sm" onclick="srTestConnectionUI()">Test connection</button>
+            </div>
+            <div id="sr-conn-status" class="sr-conn-status"></div>
+          </div>
+        </div>
+      </details>
+
+    </div><!-- /ai-prompt-panel -->
+
+    <!-- Continue editing saved session -->
+    <div class="welcome-secondary">
+      <button class="welcome-example-btn" onclick="welcomeLoadExample()">💡 Load example report</button>
+      <span class="welcome-sep" id="welcome-sep" style="display:none">·</span>
+      <button class="welcome-continue" id="welcome-continue-btn" style="display:none" onclick="welcomeContinue()">
+        Continue editing <span id="welcome-continue-name"></span> →
+      </button>
+    </div>
+
+  </div>
+</div><!-- /welcome-screen -->
+
+<!-- ============================================================
+     APP SHELL (hidden until welcome choice made)
+============================================================ -->
+<div id="app-shell" style="display:none">
+
+  <!-- ── PAGE HEADER ──────────────────────────────────────── -->
+  <header class="page-header">
+    <div class="page-header-left">
+      <button class="btn btn-ghost btn-sm" onclick="backToWelcome()" title="Back to start screen">← Back</button>
+      <h1>📊 Weekly Status Report</h1>
+      <p>Generate project update slides</p>
+    </div>
+    <div class="page-header-actions">
+      <button class="btn btn-secondary" onclick="exportJSON()" title="Save report data as JSON">💾 Save JSON</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('json-import-input').click()" title="Load report data from JSON">📂 Load JSON</button>
+      <input type="file" id="json-import-input" accept=".json" onchange="importJSON(event)" />
+      <button class="btn btn-primary" onclick="exportPPTX()">⬇ Export PPTX</button>
+    </div>
+  </header>
+
+  <!-- ── MAIN LAYOUT ──────────────────────────────────────── -->
+  <main>
+
+    <!-- LEFT: FORM PANEL -->
+    <div class="form-panel">
+
+      <!-- SLIDE METADATA -->
+      <div class="form-section">
+        <h2>Slide Details</h2>
+        <div class="field-row">
+          <label>Project name</label>
+          <input type="text" id="project-name" placeholder="My Project" />
+        </div>
+        <div class="field-row">
+          <label>Week commencing</label>
+          <input type="date" id="week-date" />
+        </div>
+        <div class="field-row">
+          <label>Next week</label>
+          <input type="date" id="next-week-date" />
+        </div>
+      </div>
+
+      <!-- TRAFFIC LIGHT LEGEND INFO -->
+      <div class="form-section">
+        <h2>Traffic Light Legend</h2>
+        <div class="legend-row">
+          <div class="legend-item"><div class="legend-dot green"></div> On track</div>
+          <div class="legend-item"><div class="legend-dot amber"></div> At risk</div>
+          <div class="legend-item"><div class="legend-dot red"></div> Off track / blocked</div>
+          <div class="legend-item"><div class="legend-dot navy"></div> Info / FYI</div>
+        </div>
+        <p style="font-size:11px;color:var(--muted);margin-top:10px;">The legend appears at the bottom of the exported slide. Each stream row is colour-coded by its RAG status.</p>
+      </div>
+
+      <!-- WORK STREAMS -->
+      <div class="form-section">
+        <h2>Work Streams</h2>
+        <div id="streams-container"></div>
+        <div style="margin-top:12px;">
+          <button class="btn btn-add" onclick="addStream()">＋ Add stream</button>
+        </div>
+        <div id="overflow-warn"></div>
+      </div>
+
+      <!-- SUPPORT REQUIRED -->
+      <div class="form-section" id="support-section">
+        <h2>Support Required from Directors <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0;">(optional — leave blank to hide)</span></h2>
+        <textarea id="support-text" rows="3" placeholder="e.g. Alignment with change management program | Workforce planning sign-off required by steering committee…"></textarea>
+      </div>
+
+    </div><!-- /form-panel -->
+
+    <!-- RIGHT: PREVIEW PANEL -->
+    <div class="preview-panel">
+      <h2>Live Preview <span style="font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0;font-size:10px;">— updates as you type</span></h2>
+      <div id="preview-wrap">
+        <svg id="preview-svg" viewBox="0 0 1333 750" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+      <p class="preview-hint">Preview is approximate. Export PPTX for the final branded slide.</p>
+    </div>
+
+  </main>
+
+</div><!-- /app-shell -->
+
+<!-- ============================================================
+     SCRIPTS
+============================================================ -->
+<script src="lib/pptxgen.bundle.js"></script>
+<script src="js/logo.js"></script>
+<script src="js/api.js"></script>
+<script src="js/prompts.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>

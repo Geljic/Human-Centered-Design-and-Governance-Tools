@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Innovative Ideation Scan — HCD Tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <!-- mammoth.js for .docx text extraction -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+  <!-- pdf.js for .pdf text extraction -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs" type="module"></script>
+  <script>
+    // pdf.js global setup — load via CDN, set worker
+    if (typeof window.pdfjsLib === 'undefined') {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.js';
+      s.onload = function() {
+        if (window.pdfjsLib) {
+          window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.js';
+        }
+      };
+      document.head.appendChild(s);
+    }
+  </script>
+  <!-- marked.js for Markdown → HTML -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+  <!-- html-docx-js for DOCX export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html-docx-js/0.3.1/html-docx.js"></script>
+  <!-- PptxGenJS for PPTX export -->
+  <script src="https://cdn.jsdelivr.net/gh/gitbrent/PptxGenJS@3.12.0/dist/pptxgen.bundle.js"></script>
+  <link rel="stylesheet" href="../shared/navbar.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- ============================================================
+     SHARED NAVBAR (inlined for file:// compatibility)
+============================================================ -->
+<nav class="hcd-navbar" role="navigation" aria-label="HCD Tools navigation">
+  <a class="hcd-navbar__brand" href="../index.html" title="HCD Tools Home">
+    <span class="hcd-navbar__brand-icon">🏠</span>
+    <span>HCD Tools</span>
+  </a>
+  <ul class="hcd-navbar__links">
+
+    <!-- HCD Tools -->
+    <li>
+      <button class="nav-group-btn active" type="button">
+        <span class="nav-icon">🔬</span> HCD Tools <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a href="../research-synthesiser/index.html" data-page="synthesiser">
+          <span class="nav-icon">🔬</span> Research Synthesiser
+        </a>
+        <a href="../data-synthesis/index.html" data-page="data-synthesis">
+          <span class="nav-icon">🧪</span> Data Synthesis
+        </a>
+        <a href="../persona-builder/index.html" data-page="persona">
+          <span class="nav-icon">🧑</span> Persona Builder
+        </a>
+        <a href="../ideation-scanner/index.html" class="active" data-page="ideation">
+          <span class="nav-icon">💡</span> Ideation Scanner
+        </a>
+        <div class="nav-dropdown__divider"></div>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🗺️</span> Journey Map <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">💼</span> Jobs to Be Done <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🖼️</span> Concept Posters <span class="nav-badge">Soon</span>
+        </a>
+      </div>
+    </li>
+
+    <!-- Project Management -->
+    <li>
+      <button class="nav-group-btn" type="button">
+        <span class="nav-icon">📋</span> Project Management <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a href="../project-charter/index.html" data-page="charter">
+          <span class="nav-icon">📋</span> Project Charter
+        </a>
+        <a href="../timeline-builder/index.html" data-page="timeline">
+          <span class="nav-icon">📅</span> Timeline Builder
+        </a>
+        <a href="../status-report/index.html" data-page="status-report">
+          <span class="nav-icon">📊</span> Status Report
+        </a>
+      </div>
+    </li>
+
+    <!-- Change Management -->
+    <li>
+      <button class="nav-group-btn" type="button">
+        <span class="nav-icon">📣</span> Change Management <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">📣</span> Change Impact Assessment <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🗓️</span> Engagement Planner <span class="nav-badge">Soon</span>
+        </a>
+      </div>
+    </li>
+
+    <!-- Business Analyst -->
+    <li>
+      <button class="nav-group-btn" type="button">
+        <span class="nav-icon">📐</span> Business Analyst <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">📐</span> Requirements Mapper <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🔄</span> Process Modeller <span class="nav-badge">Soon</span>
+        </a>
+      </div>
+    </li>
+
+  </ul>
+  <div class="hcd-navbar__right">
+    <span class="hcd-navbar__tag">NSW DoE · HCD Pilot</span>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<header>
+  <div>
+    <h1>Innovative Ideation Scan <span class="privacy-badge">🔒 Via LiteLLM proxy</span></h1>
+    <p>SD&amp;C AI Pilot — global innovation scan &amp; solution concept unpacking</p>
+  </div>
+  <button id="settings-btn" onclick="openSettings()">⚙ Settings</button>
+</header>
+
+<!-- CORS WARNING -->
+<div id="cors-warning">
+  <strong>⚠ CORS notice:</strong> You've opened this file directly from your filesystem (<code>file://</code>).
+  If API calls fail, run it from a local server instead:
+  <code>python3 -m http.server 8080</code> then open <code>http://localhost:8080</code>
+</div>
+
+<!-- ============================================================
+     SETTINGS MODAL
+============================================================ -->
+<div class="modal-overlay" id="settings-modal">
+  <div class="modal">
+    <h2>⚙ Connection Settings</h2>
+    <p>Your settings are saved in this browser only — never in the HTML file.</p>
+    <div class="modal-note">
+      🔑 Enter your LiteLLM virtual key — it starts with <code>sk-</code>.
+      It enforces your weekly budget cap automatically.
+    </div>
+    <label for="proxy-url">LiteLLM Proxy URL</label>
+    <input type="url" id="proxy-url" placeholder="" />
+    <label for="api-key">Virtual Key</label>
+    <input type="password" id="api-key" placeholder="sk-..." autocomplete="off" />
+    <label for="model-name">Model <span style="font-weight:400;color:var(--grey-400)">(choose or type your own)</span></label>
+    <input type="text" id="model-name" placeholder="claude-sonnet-4-6" list="model-list" autocomplete="off" />
+    <datalist id="model-list">
+      <option value="claude-sonnet-4-6"></option>
+      <option value="claude-haiku-4-5-20251001"></option>
+      <option value="claude-opus-4-5-20251101"></option>
+      <option value="claude-opus-4-6"></option>
+      <option value="claude-opus-4-7"></option>
+      <option value="claude-sonnet-4-5-20250929"></option>
+      <option value="gemini-3-1-pro-preview"></option>
+      <option value="gemini-flash-2-5"></option>
+      <option value="gemini-pro-2-5"></option>
+    </datalist>
+    <div id="conn-status" style="font-size:0.82rem;margin-bottom:0.75rem;"></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="test-conn-btn" onclick="testConn()">Test Connection</button>
+      <button class="btn btn-secondary" onclick="closeSettings()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveSettings()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MAIN LAYOUT
+============================================================ -->
+<main>
+
+  <!-- LEFT: INPUT PANEL -->
+  <div class="panel">
+
+    <div class="panel-title"><span class="step-num">1</span> Project Context</div>
+    <div class="field">
+      <label for="project-slug">Project name / slug</label>
+      <input type="text" id="project-slug" placeholder="e.g. school-onboarding-redesign" />
+    </div>
+    <div class="field">
+      <label for="project-context">Describe the current state, problem statement, user personas, and constraints <span class="required">*</span></label>
+      <textarea id="project-context" placeholder="e.g. We are redesigning the onboarding experience for new school staff in NSW. Current pain points include…&#10;&#10;Markdown formatting is supported."></textarea>
+      <div class="char-count" id="context-chars">0 chars</div>
+    </div>
+
+    <div class="panel-title" style="margin-top:1rem;"><span class="step-num">2</span> Opportunities &amp; Ideas</div>
+    <div class="field">
+      <label for="opportunities-text">High-level solution ideas or improvement opportunities <span class="required">*</span></label>
+      <textarea id="opportunities-text" class="short" placeholder="e.g. 1. Self-service onboarding portal&#10;2. Automated compliance tracking&#10;3. Peer mentoring matching system"></textarea>
+      <div class="char-count" id="opps-chars">0 chars</div>
+    </div>
+
+    <div class="field">
+      <label>Or upload files <span class="hint">(.txt, .pdf, .docx — multi-file OK)</span></label>
+      <div class="dropzone" id="dropzone" onclick="document.getElementById('file-input').click()">
+        <span class="dz-icon">📁</span>
+        <div class="dz-text">Drag files here or click to browse</div>
+        <div class="dz-hint">Files stay in your browser — never uploaded to a server</div>
+      </div>
+      <input type="file" id="file-input" multiple accept=".txt,.md,.pdf,.docx" style="display:none" onchange="handleFileInput(event)" />
+      <ul class="file-list" id="file-list"></ul>
+    </div>
+
+    <div class="field">
+      <label for="scan-focus">Scan Focus <span class="hint">(optional — guides the innovation scan)</span></label>
+      <select id="scan-focus">
+        <!-- Populated by JS from SCAN_FOCUS_OPTIONS -->
+      </select>
+    </div>
+
+    <div class="progress-bar"><div class="fill" id="progress-fill" style="width:0%"></div></div>
+
+    <button class="btn btn-primary" id="run-btn" onclick="runScan()" style="width:100%;padding:0.7rem;">
+      ▶ Run Ideation Scan
+    </button>
+
+    <div id="status" style="max-height:200px;overflow-y:auto;"></div>
+
+    <div class="disclaimer">
+      ⚠ AI-generated output. Practitioner review is required before use in deliverables.
+      All processing happens in your browser — files are never uploaded.
+    </div>
+  </div>
+
+  <!-- RIGHT: OUTPUT PANEL -->
+  <div class="panel">
+
+    <div class="panel-title"><span class="step-num">3</span> Results</div>
+
+    <!-- Tab bar -->
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="tab-scan" onclick="switchTab('tab-scan')">🌐 Innovation Scan</button>
+      <button class="tab-btn" data-tab="tab-solution" onclick="switchTab('tab-solution')">💡 Solution Concepts</button>
+    </div>
+
+    <!-- Export toolbar -->
+    <div class="output-toolbar">
+      <button class="btn btn-success btn-sm export-btn" onclick="doExportMd()" disabled>⬇ .md</button>
+      <button class="btn btn-success btn-sm export-btn" onclick="doExportDocx()" disabled>⬇ .docx</button>
+      <button class="btn btn-success btn-sm export-btn" onclick="doExportPptx()" disabled>⬇ .pptx</button>
+      <button class="btn btn-secondary btn-sm export-btn" onclick="doCopy()" disabled>📋 Copy</button>
+    </div>
+
+    <!-- Tab content -->
+    <div class="tab-content active" id="tab-scan">
+      <div class="output-empty">
+        <div class="empty-icon">🔍</div>
+        Run an ideation scan to see innovation insights here…
+      </div>
+    </div>
+    <div class="tab-content" id="tab-solution">
+      <div class="output-empty">
+        <div class="empty-icon">💡</div>
+        Unpacked solution concepts will appear here…
+      </div>
+    </div>
+
+    <div class="usage-stats" id="usage-stats"></div>
+  </div>
+
+</main>
+
+<!-- JS modules (order matters: api → prompts → pipeline → export → app) -->
+<script src="js/api.js"></script>
+<script src="js/prompts.js"></script>
+<script src="js/pipeline.js"></script>
+<script src="js/export.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

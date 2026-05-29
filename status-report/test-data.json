@@ -1,0 +1,56 @@
+{
+  "projectName": "Example Programme – Status Report",
+  "weekDate": "2026-05-11",
+  "nextWeekDate": "2026-05-18",
+  "streams": [
+    {
+      "id": "stream-discovery",
+      "name": "Stream 1 – Discovery & Research",
+      "rag": "green",
+      "subSections": false,
+      "achieved": "Completed initial stakeholder interviews\nDrafted research synthesis themes\nShared early findings with project sponsor",
+      "next": "Validate themes in user workshop\nFinalise research report\nBegin opportunity prioritisation",
+      "achievedProjectDev": "",
+      "achievedGovernance": "",
+      "nextProjectDev": "",
+      "nextGovernance": ""
+    },
+    {
+      "id": "stream-design",
+      "name": "Stream 2 – Solution Design",
+      "rag": "navy",
+      "subSections": false,
+      "achieved": "Concept sketches reviewed in design crit\nUsability heuristics agreed with team",
+      "next": "Build clickable prototype\nSchedule first round of user testing",
+      "achievedProjectDev": "",
+      "achievedGovernance": "",
+      "nextProjectDev": "",
+      "nextGovernance": ""
+    },
+    {
+      "id": "stream-build",
+      "name": "Stream 3 – Build & Delivery (with Project Dev / Governance split)",
+      "rag": "amber",
+      "subSections": true,
+      "achieved": "",
+      "next": "",
+      "achievedProjectDev": "Backend API endpoints scaffolded\nFront-end component library updated\nFirst integration tests passing",
+      "achievedGovernance": "Risk register reviewed at steering committee\nChange request log updated",
+      "nextProjectDev": "Implement priority feature set for sprint 4\nTighten test coverage on new endpoints",
+      "nextGovernance": "Prepare materials for next steering committee\nConfirm go-live readiness criteria with sponsor"
+    },
+    {
+      "id": "stream-change",
+      "name": "Stream 4 – Change & Communications",
+      "rag": "green",
+      "subSections": false,
+      "achieved": "Communications plan endorsed\nFAQ drafted for end-user audience",
+      "next": "Publish FAQ to intranet\nRun first awareness session for impacted teams",
+      "achievedProjectDev": "",
+      "achievedGovernance": "",
+      "nextProjectDev": "",
+      "nextGovernance": ""
+    }
+  ],
+  "supportText": "Example support text — use this section to flag dependencies, escalations, or alignment items the sponsor needs to be aware of."
+}

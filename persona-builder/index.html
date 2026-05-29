@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Persona Builder — HCD Tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../shared/navbar.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- ============================================================
+     SHARED NAVBAR
+============================================================ -->
+<nav class="hcd-navbar" role="navigation" aria-label="HCD Tools navigation">
+  <a class="hcd-navbar__brand" href="../index.html" title="HCD Tools Home">
+    <span class="hcd-navbar__brand-icon">🏠</span>
+    <span>HCD Tools</span>
+  </a>
+  <ul class="hcd-navbar__links">
+
+    <!-- HCD Tools -->
+    <li>
+      <button class="nav-group-btn active" type="button">
+        <span class="nav-icon">🔬</span> HCD Tools <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a href="../research-synthesiser/index.html" data-page="synthesiser">
+          <span class="nav-icon">🔬</span> Research Synthesiser
+        </a>
+        <a href="../data-synthesis/index.html" data-page="data-synthesis">
+          <span class="nav-icon">🧪</span> Data Synthesis
+        </a>
+        <a href="../persona-builder/index.html" class="active" data-page="persona">
+          <span class="nav-icon">🧑</span> Persona Builder
+        </a>
+        <a href="../ideation-scanner/index.html" data-page="ideation">
+          <span class="nav-icon">💡</span> Ideation Scanner
+        </a>
+        <div class="nav-dropdown__divider"></div>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🗺️</span> Journey Map <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">💼</span> Jobs to Be Done <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🖼️</span> Concept Posters <span class="nav-badge">Soon</span>
+        </a>
+      </div>
+    </li>
+
+    <!-- Project Management -->
+    <li>
+      <button class="nav-group-btn" type="button">
+        <span class="nav-icon">📋</span> Project Management <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a href="../project-charter/index.html" data-page="charter">
+          <span class="nav-icon">📋</span> Project Charter
+        </a>
+        <a href="../timeline-builder/index.html" data-page="timeline">
+          <span class="nav-icon">📅</span> Timeline Builder
+        </a>
+        <a href="../status-report/index.html" data-page="status-report">
+          <span class="nav-icon">📊</span> Status Report
+        </a>
+      </div>
+    </li>
+
+    <!-- Change Management -->
+    <li>
+      <button class="nav-group-btn" type="button">
+        <span class="nav-icon">📣</span> Change Management <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">📣</span> Change Impact Assessment <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🗓️</span> Engagement Planner <span class="nav-badge">Soon</span>
+        </a>
+      </div>
+    </li>
+
+    <!-- Business Analyst -->
+    <li>
+      <button class="nav-group-btn" type="button">
+        <span class="nav-icon">📐</span> Business Analyst <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">📐</span> Requirements Mapper <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🔄</span> Process Modeller <span class="nav-badge">Soon</span>
+        </a>
+      </div>
+    </li>
+
+  </ul>
+  <div class="hcd-navbar__right">
+    <span class="hcd-navbar__tag">HCD Tools</span>
+  </div>
+</nav>
+
+<!-- ============================================================
+     TOAST CONTAINER
+============================================================ -->
+<div id="toast-container"></div>
+
+<!-- ============================================================
+     CONFIRM MODAL
+============================================================ -->
+<div id="modal-overlay">
+  <div class="modal">
+    <h3 id="modal-title">Confirm</h3>
+    <p id="modal-message">Are you sure?</p>
+    <div class="modal-actions">
+      <button class="toolbar-btn" id="modal-cancel">Cancel</button>
+      <button class="toolbar-btn danger" id="modal-confirm">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     AI FIELD SELECTOR DIALOG
+============================================================ -->
+<div id="ai-dialog">
+  <div class="ai-dialog-box">
+    <h3>Generate with AI ✨</h3>
+    <p id="ai-md-info" class="ai-md-info"></p>
+    <p class="ai-dialog-hint">Select which fields the AI should populate from your research notes:</p>
+    <div id="ai-field-list" class="ai-field-list"></div>
+    <div class="ai-dialog-actions">
+      <button class="toolbar-btn" id="ai-dialog-cancel">Cancel</button>
+      <button class="toolbar-btn primary" id="ai-dialog-run">Generate selected fields</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     TOOL ICON PICKER MODAL
+============================================================ -->
+<div id="tool-icon-picker-modal">
+  <div class="icon-picker-box">
+    <div class="icon-picker-header">
+      <h3>Pick an icon</h3>
+      <button class="icon-picker-close" onclick="closeToolIconPicker()">✕</button>
+    </div>
+    <div id="tool-icon-picker-grid" class="tool-icon-picker-grid"></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     DE-IDENTIFICATION SCREEN
+============================================================ -->
+<div id="deid-screen" style="display:none">
+  <div class="deid-inner">
+
+    <div class="deid-header">
+      <button class="toolbar-btn" onclick="backToWelcome()">Back</button>
+      <div class="deid-title">
+        <h2>🔒 Remove personal information</h2>
+        <p>Replace names or other identifying details before your notes are sent to AI. All replacements happen in your browser — nothing is stored or sent until you click Apply.</p>
+      </div>
+    </div>
+
+    <div class="deid-body">
+
+      <!-- Left: editable text -->
+      <div class="deid-preview-panel">
+        <div class="deid-panel-label">Research notes — edit directly or use find and replace</div>
+        <textarea id="deid-editor" class="deid-editor" spellcheck="false"
+          oninput="onDeIdEditorInput(this.value)"
+          placeholder="Your research notes will appear here…"></textarea>
+      </div>
+
+      <!-- Right: rules -->
+      <div class="deid-rules-panel">
+        <div class="deid-panel-label">Find and replace</div>
+        <p class="deid-rules-hint">Add terms to find and what to replace them with. Matching is case-insensitive and whole-word.</p>
+
+        <div id="deid-rules-list" class="deid-rules-list"></div>
+
+        <button class="toolbar-btn" onclick="addDeIdRow()" style="margin-top:8px;">+ Add row</button>
+
+        <div class="deid-privacy-note">
+          <span class="deid-privacy-icon">🔒</span>
+          <span>Replacements happen in your browser only. The cleaned text is what gets sent to AI — your original file is never uploaded.</span>
+        </div>
+
+        <label class="deid-consent-label">
+          <input type="checkbox" id="deid-consent-checkbox" onchange="onDeIdConsentChange()" />
+          <span>I confirm I have removed all personal information from the text above before sending to AI.</span>
+        </label>
+
+        <div class="deid-actions">
+          <button class="toolbar-btn" onclick="skipDeId()">Skip - notes are already clean</button>
+          <button class="toolbar-btn primary" id="btn-deid-apply" onclick="applyDeIdAndContinue()" disabled>Apply and Continue</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     WELCOME SCREEN
+============================================================ -->
+<div id="welcome-screen">
+
+  <!-- Hidden file inputs triggered by welcome card actions -->
+  <input type="file" id="welcome-md-input" accept=".md,.txt" style="display:none"
+    onchange="welcomeMdSelected(this.files[0]); this.value=''" />
+  <input type="file" id="welcome-json-input" accept=".json" style="display:none"
+    onchange="welcomeJsonSelected(this.files[0]); this.value=''" />
+
+  <div class="welcome-inner">
+
+    <div class="welcome-brand">
+      <span class="welcome-brand-icon">🧑</span>
+      <div class="welcome-brand-text">
+        <h2>Persona Builder</h2>
+        <p>Service Design Tools · HCD</p>
+      </div>
+    </div>
+
+    <p class="welcome-prompt">How would you like to build this persona?</p>
+
+    <div class="welcome-cards">
+
+      <button class="welcome-card welcome-card--ai" onclick="welcomeChooseAi()">
+        <span class="welcome-card-icon">✨</span>
+        <span class="welcome-card-title">Generate from research notes</span>
+        <span class="welcome-card-desc">Upload a .md summary from your research and AI will draft the persona fields for you to review and refine. You stay in control of the final content.</span>
+        <span class="welcome-card-hint">Best when you have a synthesis or transcript file ready</span>
+      </button>
+
+      <button class="welcome-card" onclick="welcomeChooseManual()">
+        <span class="welcome-card-icon">✏️</span>
+        <span class="welcome-card-title">Build manually</span>
+        <span class="welcome-card-desc">Start with a blank form and fill in the persona yourself, section by section. AI is still available to help populate individual fields at any point.</span>
+        <span class="welcome-card-hint">Good for workshop outputs or when you already know the content</span>
+      </button>
+
+      <button class="welcome-card" onclick="welcomeChooseLoad()">
+        <span class="welcome-card-icon">📥</span>
+        <span class="welcome-card-title">Load a saved persona</span>
+        <span class="welcome-card-desc">Import a JSON file exported from a previous session to continue editing, or adapt an existing persona for a new project or context.</span>
+        <span class="welcome-card-hint">You will need a JSON file exported from this tool</span>
+      </button>
+
+    </div>
+
+    <div class="welcome-secondary">
+      <button class="welcome-example-btn" onclick="welcomeLoadExample()">💡 Load example persona</button>
+      <span class="welcome-sep" id="welcome-sep" style="display:none"></span>
+      <button class="welcome-continue" id="welcome-continue-btn" style="display:none" onclick="welcomeContinue()">
+        Continue editing <span id="welcome-continue-name"></span> →
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================
+     APP SHELL
+============================================================ -->
+<div id="app" style="display:none">
+
+  <!-- HEADER — brand left, all actions right (matches other tools) -->
+  <header id="app-header">
+    <div class="brand">
+      <div class="brand-icon">🧑</div>
+      <div class="brand-text">
+        <h1>Persona Builder</h1>
+        <p>Service Design Tools · HCD</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <!-- Import group -->
+      <label class="toolbar-btn" title="Import persona from JSON file">
+        📥 Import JSON
+        <input type="file" accept=".json" style="display:none"
+          onchange="importJSON(this.files[0]); this.value=''" />
+      </label>
+      <label class="toolbar-btn" title="Import research notes or transcript (.md file)">
+        📄 Import .md
+        <input type="file" accept=".md,.txt" style="display:none"
+          onchange="importMarkdown(this.files[0]); this.value=''" />
+      </label>
+      <span id="md-file-indicator" class="md-indicator"></span>
+
+      <span class="header-divider"></span>
+
+      <!-- Export group -->
+      <button class="toolbar-btn" onclick="exportJSON()" title="Export persona as JSON">📤 Export JSON</button>
+      <button class="toolbar-btn" onclick="exportPPTX()" title="Export as PowerPoint slide">📊 PPTX</button>
+      <button class="toolbar-btn" onclick="exportPDF()" title="Print / Save as PDF">🖨️ PDF</button>
+
+      <span class="header-divider"></span>
+
+      <!-- AI + utility -->
+      <button class="toolbar-btn primary" id="btn-generate-ai" onclick="openAiDialog()" title="Use AI to fill fields from imported .md file">✨ AI Generate</button>
+      <button class="toolbar-btn" onclick="loadExample()" title="Load example persona (Dave Castillo)">💡 Example</button>
+      <button class="toolbar-btn danger" onclick="clearAll()" title="Clear all fields">🗑️</button>
+
+      <span class="header-divider"></span>
+
+      <!-- Save indicator -->
+      <span id="save-indicator">
+        <span id="save-dot">●</span>
+        <span id="save-text">Saved</span>
+      </span>
+    </div>
+  </header>
+
+  <!-- MAIN LAYOUT: editor + preview -->
+  <div id="main-layout">
+
+    <!-- ── EDITOR PANEL ──────────────────────────────────── -->
+    <div id="editor-panel">
+
+      <!-- Tab buttons -->
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="identity">🪪 Identity</button>
+        <button class="tab-btn" data-tab="content">📝 Content</button>
+        <button class="tab-btn" data-tab="tools">🛠️ Tools</button>
+        <button class="tab-btn" data-tab="attributes">📊 Attributes</button>
+        <button class="tab-btn" data-tab="ai-setup">⚙️ AI Setup</button>
+      </div>
+
+      <!-- ── IDENTITY TAB ─────────────────────────────── -->
+      <div id="tab-identity" class="tab-panel active">
+
+        <div class="field-group">
+          <label class="field-label">Full Name</label>
+          <div class="name-row">
+            <input type="text" id="field-name" class="field-input"
+              placeholder="e.g. Dave Castillo"
+              oninput="setField('name', this.value)" />
+            <button type="button" class="toolbar-btn" onclick="randomiseName()" title="Generate a random persona name">🎲 Random</button>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">Role / Title</label>
+            <input type="text" id="field-role" class="field-input"
+              placeholder="e.g. Training Advisor"
+              oninput="setField('role', this.value)" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Team</label>
+            <input type="text" id="field-team" class="field-input"
+              placeholder="e.g. RTS team"
+              oninput="setField('team', this.value)" />
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Biography</label>
+          <textarea id="field-bio" class="field-textarea" rows="5"
+            placeholder="Write a 3–5 sentence description of who this person is and what they do day-to-day…"
+            oninput="setField('bio', this.value)"></textarea>
+        </div>
+
+        <!-- Avatar upload -->
+        <div class="field-group">
+          <label class="field-label">Avatar / Photo</label>
+          <label class="upload-drop-zone" id="avatar-drop-zone">
+            <input type="file" accept="image/*" style="display:none"
+              onchange="handleAvatarUpload(this.files[0]); this.value=''" />
+            <div class="upload-drop-inner">
+              <img id="avatar-upload-preview" src="" alt="" class="avatar-upload-preview" style="display:none" />
+              <span id="avatar-upload-hint">
+                <span style="font-size:2rem">🖼️</span><br/>
+                Click to upload a photo<br/>
+                <small>PNG, JPG, SVG — max 2MB</small>
+              </span>
+            </div>
+          </label>
+          <button type="button" class="avatar-remove-btn" id="avatar-remove-btn"
+            onclick="removeAvatarUpload(event)" style="display:none">✕ Remove photo</button>
+        </div>
+
+      </div><!-- /tab-identity -->
+
+      <!-- ── CONTENT TAB ──────────────────────────────── -->
+      <div id="tab-content" class="tab-panel">
+        <p class="tab-hint">Add, rename, reorder or remove sections. Use <strong>📦 Box</strong> style for left-column sections and <strong>🔵 Blue header</strong> for right-column sections.</p>
+        <div id="content-sections-container"></div>
+        <button class="add-row-btn" id="add-content-section-btn" onclick="addContentSection()">+ Add section</button>
+      </div><!-- /tab-content -->
+
+      <!-- ── TOOLS TAB ────────────────────────────────── -->
+      <div id="tab-tools" class="tab-panel">
+        <p class="tab-hint">Add the tools and systems this persona uses. Click the icon to change it, or upload a custom image.</p>
+        <div id="tools-list" class="tools-list-container"></div>
+        <button class="add-row-btn" onclick="addRow('tools', { name: '', iconType: 'library', iconKey: 'mobile', iconDataUrl: '' }, renderToolsSection)">+ Add tool</button>
+      </div><!-- /tab-tools -->
+
+      <!-- ── ATTRIBUTES TAB ───────────────────────────── -->
+      <div id="tab-attributes" class="tab-panel">
+        <p class="tab-hint">Edit attribute names and end labels. Add or remove attributes as needed.</p>
+        <div id="attributes-list" class="attributes-list-container"></div>
+        <button class="add-row-btn" onclick="addAttribute()">+ Add attribute</button>
+      </div><!-- /tab-attributes -->
+
+      <!-- ── AI SETUP TAB ─────────────────────────────── -->
+      <div id="tab-ai-setup" class="tab-panel">
+        <p class="tab-hint">Configure your LiteLLM gateway to enable AI-assisted field generation from research notes.</p>
+
+        <div class="field-group">
+          <label class="field-label">API Endpoint URL</label>
+          <input type="url" id="ai-endpoint" class="field-input"
+            placeholder="https://api.anthropic.com"
+            oninput="saveApiCredentials(this.value, getApiKey(), getModel())" />
+          <span class="field-hint">Claude API Gateway URL (without trailing slash)</span>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">API Key</label>
+          <input type="password" id="ai-key" class="field-input"
+            placeholder="sk-…"
+            oninput="saveApiCredentials(getEndpoint(), this.value, getModel())" />
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Model</label>
+          <div class="model-row">
+            <input type="text" id="ai-model-select" class="field-input"
+              placeholder="claude-sonnet-4-6"
+              oninput="saveApiCredentials(getEndpoint(), getApiKey(), this.value)" />
+            <button class="toolbar-btn" onclick="testAndLoadModels()" id="btn-test-conn">
+              Test Connection
+            </button>
+          </div>
+          <div id="model-list" class="model-list"></div>
+          <div id="conn-status" class="conn-status"></div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Import Research Notes (.md)</label>
+          <label class="upload-drop-zone compact">
+            <input type="file" accept=".md,.txt" style="display:none"
+              onchange="importMarkdown(this.files[0]); this.value=''" />
+            <div class="upload-drop-inner">
+              <span>📄 Click to load a .md or .txt research file</span>
+              <span id="md-file-indicator-2" class="md-indicator-inline"></span>
+            </div>
+          </label>
+          <span class="field-hint">File content is kept in memory only — not saved to localStorage.</span>
+        </div>
+
+      </div><!-- /tab-ai-setup -->
+
+    </div><!-- /editor-panel -->
+
+    <!-- ── PREVIEW PANEL ─────────────────────────────────── -->
+    <div id="preview-panel">
+      <div class="preview-header">
+        <span>Live Preview</span>
+        <span class="preview-hint">Updates as you type</span>
+      </div>
+      <div class="preview-scroll">
+        <div id="preview-loading" class="preview-loading">
+          <div class="loading-spinner"></div>
+          <span>AI is generating…</span>
+        </div>
+        <div id="persona-preview"></div>
+      </div>
+    </div><!-- /preview-panel -->
+
+  </div><!-- /main-layout -->
+
+</div><!-- /app -->
+
+<!-- ============================================================
+     SCRIPTS — load order matters
+============================================================ -->
+<script src="lib/pptxgen.bundle.js"></script>
+<script src="js/state.js?v=7"></script>
+<script src="js/api.js?v=7"></script>
+<script src="js/prompts.js?v=7"></script>
+<script src="js/deidentify.js?v=1"></script>
+<script src="js/avatar.js?v=7"></script>
+<script src="js/tools-icons.js?v=7"></script>
+<script src="js/fields.js?v=7"></script>
+<script src="js/storage.js?v=7"></script>
+<script src="js/preview.js?v=7"></script>
+<script src="js/ui.js?v=7"></script>
+<script src="js/export-pptx.js?v=7"></script>
+<script src="js/export-pdf.js?v=7"></script>
+
+<script>
+// ============================================================
+// APP INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  loadSaved();
+  initTabs();
+  initModal();
+  initAiDialog();
+  renderAllSections();
+  renderPreview();
+  restoreAvatarUploadUI();
+  setSaveIndicator('saved');
+  initWelcome();
+});
+
+// ── AVATAR UPLOAD ZONE — restore state on load ───────────────
+function restoreAvatarUploadUI() {
+  const preview    = document.getElementById('avatar-upload-preview');
+  const hint       = document.getElementById('avatar-upload-hint');
+  const removeBtn  = document.getElementById('avatar-remove-btn');
+  if (!preview) return;
+  if (formData.avatarType === 'upload' && formData.avatarDataUrl) {
+    preview.src          = formData.avatarDataUrl;
+    preview.style.display = 'block';
+    if (hint)      hint.style.display      = 'none';
+    if (removeBtn) removeBtn.style.display = '';
+  } else {
+    preview.src          = '';
+    preview.style.display = 'none';
+    if (hint)      hint.style.display      = '';
+    if (removeBtn) removeBtn.style.display = 'none';
+  }
+}
+
+// ── TEST CONNECTION + LOAD MODELS ────────────────────────────
+async function testAndLoadModels() {
+  const btn    = document.getElementById('btn-test-conn');
+  const status = document.getElementById('conn-status');
+  const list   = document.getElementById('model-list');
+
+  btn.disabled     = true;
+  btn.textContent  = 'Testing…';
+  status.textContent = '';
+  status.className   = 'conn-status';
+  list.innerHTML     = '';
+
+  try {
+    const result = await testConnection();
+    status.textContent = '✅ Connected — ' + result.models.length + ' model(s) available';
+    status.classList.add('success');
+
+    if (result.models.length > 0) {
+      list.innerHTML = '<p class="model-list-label">Click a model to select it:</p>' +
+        result.models.map((m) =>
+          `<button class="model-chip ${getModel() === m ? 'selected' : ''}"
+            onclick="selectModel('${m}')">${m}</button>`
+        ).join('');
+    }
+  } catch (err) {
+    status.textContent = '❌ ' + err.message;
+    status.classList.add('error');
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = 'Test Connection';
+  }
+}
+
+function selectModel(modelId) {
+  saveApiCredentials(getEndpoint(), getApiKey(), modelId);
+  const modelInput = document.getElementById('ai-model-select');
+  if (modelInput) modelInput.value = modelId;
+  // Update chip selection
+  document.querySelectorAll('.model-chip').forEach((chip) => {
+    chip.classList.toggle('selected', chip.textContent === modelId);
+  });
+  showToast('Model set to: ' + modelId, 'success');
+}
+
+</script>
+
+<footer class="site-footer">
+  HCD Tools · Built with Claude · Personal project
+</footer>
+
+</body>
+</html>

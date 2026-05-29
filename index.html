@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HCD AI Tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared/navbar.css" />
+  <style>
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #eef1f5;
+      --surface:      #ffffff;
+      --border:       #dde1e7;
+      --text:         #1f2937;
+      --text-muted:   #6b7280;
+      --navy:         #1a3a5c;
+      --blue:         #4A90D9;
+      --blue-light:   #EBF4FF;
+      --radius:       8px;
+      --shadow-sm:    0 1px 3px rgba(0,0,0,0.07);
+      --shadow-md:    0 4px 14px rgba(0,0,0,0.09);
+      --transition:   0.16s ease;
+    }
+
+    html { font-size: 15px; scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ============================================================
+       HERO BANNER  — matches SharePoint light-blue header
+    ============================================================ */
+    .hero {
+      background: linear-gradient(135deg, #dce8f5 0%, #eef3fa 60%, #f0f4f8 100%);
+      padding: 48px 40px 52px;
+      border-bottom: 1px solid #c9d8ea;
+    }
+
+    .hero h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    .hero p {
+      margin-top: 8px;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      max-width: 560px;
+    }
+
+    /* ============================================================
+       PAGE BODY
+    ============================================================ */
+    .page-body {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px 64px;
+    }
+
+    /* ============================================================
+       SECTION BLOCK
+    ============================================================ */
+    .section-block {
+      padding: 40px 0 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-block:last-child {
+      border-bottom: none;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+
+    /* ============================================================
+       TOOL GRID  — 4-column icon+label cards like SharePoint
+    ============================================================ */
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .tool-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 540px) {
+      .tool-grid { grid-template-columns: 1fr; }
+      .page-body { padding: 0 16px 48px; }
+      .hero { padding: 32px 20px 36px; }
+    }
+
+    .tool-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: var(--text);
+      transition: box-shadow var(--transition), border-color var(--transition), transform var(--transition);
+      cursor: pointer;
+    }
+
+    .tool-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: #b0c4d8;
+      transform: translateY(-1px);
+    }
+
+    .tool-card.disabled {
+      opacity: 0.55;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .tool-card__icon {
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 1.4rem;
+      line-height: 1;
+    }
+
+    .tool-card__label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .tool-card__sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+      font-weight: 400;
+    }
+
+    .tool-card__badge {
+      margin-left: auto;
+      flex-shrink: 0;
+      font-size: 0.65rem;
+      font-weight: 700;
+      background: #f3f4f6;
+      color: var(--text-muted);
+      padding: 2px 7px;
+      border-radius: 10px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border: 1px solid var(--border);
+    }
+
+    /* ============================================================
+       ABOUT / INFO STRIP
+    ============================================================ */
+    .info-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 700px) {
+      .info-strip { grid-template-columns: 1fr; }
+    }
+
+    .info-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+    }
+
+    .info-card__icon {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .info-card h3 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .info-card p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .site-footer {
+      text-align: center;
+      padding: 24px 16px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     SHARED NAVBAR
+============================================================ -->
+<nav class="hcd-navbar" role="navigation" aria-label="HCD Tools navigation">
+  <a class="hcd-navbar__brand" href="index.html" title="HCD Tools Home">
+    <span class="hcd-navbar__brand-icon">🏠</span>
+    <span>HCD Tools</span>
+  </a>
+  <ul class="hcd-navbar__links">
+
+    <!-- HCD Tools -->
+    <li>
+      <button class="nav-group-btn" type="button">
+        <span class="nav-icon">🔬</span> HCD Tools <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a href="research-synthesiser/index.html" data-page="synthesiser">
+          <span class="nav-icon">🔬</span> Research Synthesiser
+        </a>
+        <a href="data-synthesis/index.html" data-page="data-synthesis">
+          <span class="nav-icon">🧪</span> Data Synthesis
+        </a>
+        <a href="persona-builder/index.html" data-page="persona">
+          <span class="nav-icon">🧑</span> Persona Builder
+        </a>
+        <a href="ideation-scanner/index.html" data-page="ideation">
+          <span class="nav-icon">💡</span> Ideation Scanner
+        </a>
+        <div class="nav-dropdown__divider"></div>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🗺️</span> Journey Map <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">💼</span> Jobs to Be Done <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🖼️</span> Concept Posters <span class="nav-badge">Soon</span>
+        </a>
+      </div>
+    </li>
+
+    <!-- Project Management -->
+    <li>
+      <button class="nav-group-btn" type="button">
+        <span class="nav-icon">📋</span> Project Management <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a href="project-charter/index.html" data-page="charter">
+          <span class="nav-icon">📋</span> Project Charter
+        </a>
+        <a href="timeline-builder/index.html" data-page="timeline">
+          <span class="nav-icon">📅</span> Timeline Builder
+        </a>
+        <a href="status-report/index.html" data-page="status-report">
+          <span class="nav-icon">📊</span> Status Report
+        </a>
+      </div>
+    </li>
+
+    <!-- Change Management -->
+    <li>
+      <button class="nav-group-btn" type="button">
+        <span class="nav-icon">📣</span> Change Management <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">📣</span> Change Impact Assessment <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🗓️</span> Engagement Planner <span class="nav-badge">Soon</span>
+        </a>
+      </div>
+    </li>
+
+    <!-- Business Analyst -->
+    <li>
+      <button class="nav-group-btn" type="button">
+        <span class="nav-icon">📐</span> Business Analyst <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">📐</span> Requirements Mapper <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🔄</span> Process Modeller <span class="nav-badge">Soon</span>
+        </a>
+      </div>
+    </li>
+
+  </ul>
+  <div class="hcd-navbar__right">
+    <span class="hcd-navbar__tag">HCD Tools</span>
+  </div>
+</nav>
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+<div class="hero">
+  <h1>HCD AI Tools</h1>
+  <p>AI-powered tools to support HCD research, project planning, and service design.</p>
+</div>
+
+<!-- ============================================================
+     PAGE BODY
+============================================================ -->
+<div class="page-body">
+
+  <!-- ── HCD Tools ── -->
+  <div class="section-block">
+    <h2 class="section-title">HCD Tools</h2>
+    <div class="tool-grid">
+
+      <a class="tool-card" href="research-synthesiser/index.html">
+        <div class="tool-card__icon">🔬</div>
+        <div>
+          <div class="tool-card__label">Research Synthesiser</div>
+          <div class="tool-card__sub">Synthesise participant transcripts</div>
+        </div>
+      </a>
+
+      <a class="tool-card" href="data-synthesis/index.html">
+        <div class="tool-card__icon">🧪</div>
+        <div>
+          <div class="tool-card__label">Data Synthesis</div>
+          <div class="tool-card__sub">Synthesise transcripts &amp; cross-cutting themes via AI</div>
+        </div>
+      </a>
+
+      <a class="tool-card" href="persona-builder/index.html">
+        <div class="tool-card__icon">🧑</div>
+        <div>
+          <div class="tool-card__label">Persona Builder</div>
+          <div class="tool-card__sub">Create HCD user persona cards with AI assistance</div>
+        </div>
+      </a>
+
+      <a class="tool-card" href="ideation-scanner/index.html">
+        <div class="tool-card__icon">💡</div>
+        <div>
+          <div class="tool-card__label">Ideation Scanner</div>
+          <div class="tool-card__sub">Scan and prioritise ideas from ideation sessions</div>
+        </div>
+      </a>
+
+      <a class="tool-card disabled" href="#" tabindex="-1" aria-disabled="true">
+        <div class="tool-card__icon">🗺️</div>
+        <div>
+          <div class="tool-card__label">Journey Map</div>
+          <div class="tool-card__sub">Structure journey map outputs</div>
+        </div>
+        <span class="tool-card__badge">Soon</span>
+      </a>
+
+      <a class="tool-card disabled" href="#" tabindex="-1" aria-disabled="true">
+        <div class="tool-card__icon">💼</div>
+        <div>
+          <div class="tool-card__label">Jobs to Be Done</div>
+          <div class="tool-card__sub">Frame user needs as JTBD statements</div>
+        </div>
+        <span class="tool-card__badge">Soon</span>
+      </a>
+
+      <a class="tool-card disabled" href="#" tabindex="-1" aria-disabled="true">
+        <div class="tool-card__icon">🖼️</div>
+        <div>
+          <div class="tool-card__label">Concept Posters</div>
+          <div class="tool-card__sub">Generate concept poster outputs</div>
+        </div>
+        <span class="tool-card__badge">Soon</span>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ── Project Management Tools ── -->
+  <div class="section-block">
+    <h2 class="section-title">Project Management Tools</h2>
+    <div class="tool-grid">
+
+      <a class="tool-card" href="project-charter/index.html">
+        <div class="tool-card__icon">📋</div>
+        <div>
+          <div class="tool-card__label">Project Charter</div>
+          <div class="tool-card__sub">Generate project charters</div>
+        </div>
+      </a>
+
+      <a class="tool-card" href="timeline-builder/index.html">
+        <div class="tool-card__icon">📅</div>
+        <div>
+          <div class="tool-card__label">Timeline Builder</div>
+          <div class="tool-card__sub">Generate Gantt timeline PPTX slides</div>
+        </div>
+      </a>
+
+      <a class="tool-card" href="status-report/index.html">
+        <div class="tool-card__icon">📊</div>
+        <div>
+          <div class="tool-card__label">Weekly Status Report</div>
+          <div class="tool-card__sub">Generate project update PPTX slides</div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ── Change Management Tools ── -->
+  <div class="section-block">
+    <h2 class="section-title">Change Management Tools</h2>
+    <div class="tool-grid">
+
+      <a class="tool-card disabled" href="#" tabindex="-1" aria-disabled="true">
+        <div class="tool-card__icon">📣</div>
+        <div>
+          <div class="tool-card__label">Change Impact Assessment</div>
+          <div class="tool-card__sub">Assess and communicate change impacts</div>
+        </div>
+        <span class="tool-card__badge">Soon</span>
+      </a>
+
+      <a class="tool-card disabled" href="#" tabindex="-1" aria-disabled="true">
+        <div class="tool-card__icon">🗓️</div>
+        <div>
+          <div class="tool-card__label">Engagement Planner</div>
+          <div class="tool-card__sub">Plan stakeholder engagement activities</div>
+        </div>
+        <span class="tool-card__badge">Soon</span>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ── Business Analyst Tools ── -->
+  <div class="section-block">
+    <h2 class="section-title">Business Analyst Tools</h2>
+    <div class="tool-grid">
+
+      <a class="tool-card disabled" href="#" tabindex="-1" aria-disabled="true">
+        <div class="tool-card__icon">📐</div>
+        <div>
+          <div class="tool-card__label">Requirements Mapper</div>
+          <div class="tool-card__sub">Map user needs to business requirements</div>
+        </div>
+        <span class="tool-card__badge">Soon</span>
+      </a>
+
+      <a class="tool-card disabled" href="#" tabindex="-1" aria-disabled="true">
+        <div class="tool-card__icon">🔄</div>
+        <div>
+          <div class="tool-card__label">Process Modeller</div>
+          <div class="tool-card__sub">Document and analyse business processes</div>
+        </div>
+        <span class="tool-card__badge">Soon</span>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ── About ── -->
+  <div class="section-block">
+    <h2 class="section-title">About This Pilot</h2>
+    <div class="info-strip">
+
+      <div class="info-card">
+        <div class="info-card__icon">🎯</div>
+        <h3>Purpose</h3>
+        <p>These tools support HCD practitioners in moving faster from research to insight to action.</p>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card__icon">🔒</div>
+        <h3>Privacy &amp; Data</h3>
+        <p>All tools run entirely in your browser. No data is sent to external servers unless you explicitly connect an AI API key. Transcripts stay on your device.</p>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card__icon">📁</div>
+        <h3>Sharing &amp; Handoff</h3>
+        <p>Each tool has an <strong>Export JSON</strong> button. Share the JSON file with teammates so they can pick up where you left off.</p>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card__icon">🚀</div>
+        <h3>Getting Started</h3>
+        <p>Select a tool above to begin. Each tool includes built-in guidance.</p>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /page-body -->
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<footer class="site-footer">
+  HCD Tools · Built with Claude · Personal project
+</footer>
+
+</body>
+</html>

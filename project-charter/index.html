@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HCD Project Charter Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../shared/navbar.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- ============================================================
+     SHARED NAVBAR
+============================================================ -->
+<nav class="hcd-navbar" role="navigation" aria-label="HCD Tools navigation">
+  <a class="hcd-navbar__brand" href="../index.html" title="HCD Tools Home">
+    <span class="hcd-navbar__brand-icon">🏠</span>
+    <span>HCD Tools</span>
+  </a>
+  <ul class="hcd-navbar__links">
+
+    <!-- HCD Tools -->
+    <li>
+      <button class="nav-group-btn" type="button">
+        <span class="nav-icon">🔬</span> HCD Tools <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a href="../research-synthesiser/index.html" data-page="synthesiser">
+          <span class="nav-icon">🔬</span> Research Synthesiser
+        </a>
+        <a href="../data-synthesis/index.html" data-page="data-synthesis">
+          <span class="nav-icon">🧪</span> Data Synthesis
+        </a>
+        <a href="../persona-builder/index.html" data-page="persona">
+          <span class="nav-icon">🧑</span> Persona Builder
+        </a>
+        <a href="../ideation-scanner/index.html" data-page="ideation">
+          <span class="nav-icon">💡</span> Ideation Scanner
+        </a>
+        <div class="nav-dropdown__divider"></div>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🗺️</span> Journey Map <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">💼</span> Jobs to Be Done <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🖼️</span> Concept Posters <span class="nav-badge">Soon</span>
+        </a>
+      </div>
+    </li>
+
+    <!-- Project Management -->
+    <li>
+      <button class="nav-group-btn active" type="button">
+        <span class="nav-icon">📋</span> Project Management <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a href="../project-charter/index.html" class="active" data-page="charter">
+          <span class="nav-icon">📋</span> Project Charter
+        </a>
+        <a href="../timeline-builder/index.html" data-page="timeline">
+          <span class="nav-icon">📅</span> Timeline Builder
+        </a>
+        <a href="../status-report/index.html" data-page="status-report">
+          <span class="nav-icon">📊</span> Status Report
+        </a>
+      </div>
+    </li>
+
+    <!-- Change Management -->
+    <li>
+      <button class="nav-group-btn" type="button">
+        <span class="nav-icon">📣</span> Change Management <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">📣</span> Change Impact Assessment <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🗓️</span> Engagement Planner <span class="nav-badge">Soon</span>
+        </a>
+      </div>
+    </li>
+
+    <!-- Business Analyst -->
+    <li>
+      <button class="nav-group-btn" type="button">
+        <span class="nav-icon">📐</span> Business Analyst <span class="nav-chevron">▼</span>
+      </button>
+      <div class="nav-dropdown">
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">📐</span> Requirements Mapper <span class="nav-badge">Soon</span>
+        </a>
+        <a class="nav-disabled" href="#" tabindex="-1" aria-disabled="true">
+          <span class="nav-icon">🔄</span> Process Modeller <span class="nav-badge">Soon</span>
+        </a>
+      </div>
+    </li>
+
+  </ul>
+  <div class="hcd-navbar__right">
+    <span class="hcd-navbar__tag">HCD Tools</span>
+  </div>
+</nav>
+
+<!-- ============================================================
+     TOAST CONTAINER
+============================================================ -->
+<div id="toast-container"></div>
+
+<!-- ============================================================
+     CONFIRM MODAL
+============================================================ -->
+<div id="modal-overlay">
+  <div class="modal">
+    <h3 id="modal-title">Confirm</h3>
+    <p id="modal-message">Are you sure?</p>
+    <div class="modal-actions">
+      <button class="toolbar-btn" id="modal-cancel">Cancel</button>
+      <button class="toolbar-btn danger" id="modal-confirm">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     AI FIELD SELECTOR DIALOG
+============================================================ -->
+<div id="ai-dialog">
+  <div class="ai-dialog-box">
+    <h3>Generate with AI ✨</h3>
+    <p id="ai-md-info" class="ai-md-info"></p>
+    <p class="ai-dialog-hint">Select which charter sections the AI should populate from your research notes:</p>
+    <div id="ai-field-list" class="ai-field-list"></div>
+    <div class="ai-dialog-actions">
+      <button class="toolbar-btn" id="ai-dialog-cancel">Cancel</button>
+      <button class="toolbar-btn primary" id="ai-dialog-run">Generate selected sections</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     WELCOME SCREEN
+============================================================ -->
+<div id="welcome-screen">
+
+  <!-- Hidden file inputs triggered by welcome card actions -->
+  <input type="file" id="welcome-md-input" accept=".md,.txt" style="display:none"
+    onchange="welcomeMdSelected(this.files[0]); this.value=''" />
+  <input type="file" id="welcome-json-input" accept=".json" style="display:none"
+    onchange="welcomeJsonSelected(this.files[0]); this.value=''" />
+
+  <div class="welcome-inner">
+
+    <div class="welcome-brand">
+      <span class="welcome-brand-icon">📋</span>
+      <div class="welcome-brand-text">
+        <h2>Project Charter Generator</h2>
+        <p>Service Design Tools · HCD</p>
+      </div>
+    </div>
+
+    <p class="welcome-prompt">How would you like to build this charter?</p>
+
+    <div class="welcome-cards">
+
+      <button class="welcome-card welcome-card--ai" onclick="welcomeChooseAi()">
+        <span class="welcome-card-icon">✨</span>
+        <span class="welcome-card-title">Generate from research notes</span>
+        <span class="welcome-card-desc">Upload a .md synthesis or notes file and AI will draft the charter sections for you to review and refine. You stay in control of the final content.</span>
+        <span class="welcome-card-hint">Best when you have a synthesis or discovery notes file ready</span>
+      </button>
+
+      <button class="welcome-card" onclick="welcomeChooseManual()">
+        <span class="welcome-card-icon">✏️</span>
+        <span class="welcome-card-title">Build manually</span>
+        <span class="welcome-card-desc">Start with a blank form and fill in each section yourself. AI is still available to help populate individual sections at any point.</span>
+        <span class="welcome-card-hint">Good for workshop outputs or when you already know the content</span>
+      </button>
+
+      <button class="welcome-card" onclick="welcomeChooseLoad()">
+        <span class="welcome-card-icon">📥</span>
+        <span class="welcome-card-title">Load a saved charter</span>
+        <span class="welcome-card-desc">Import a JSON file exported from a previous session to continue editing, or adapt an existing charter for a new project.</span>
+        <span class="welcome-card-hint">You will need a JSON file exported from this tool</span>
+      </button>
+
+    </div>
+
+    <div class="welcome-secondary">
+      <span class="welcome-sep" id="welcome-sep" style="display:none"></span>
+      <button class="welcome-continue" id="welcome-continue-btn" style="display:none" onclick="welcomeContinue()">
+        Continue editing <span id="welcome-continue-name"></span> →
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================
+     DE-IDENTIFICATION SCREEN
+============================================================ -->
+<div id="deid-screen" style="display:none">
+  <div class="deid-inner">
+
+    <div class="deid-header">
+      <button class="toolbar-btn" onclick="backToWelcome()">Back</button>
+      <div class="deid-title">
+        <h2>🔒 Remove personal information</h2>
+        <p>Replace names or other identifying details before your notes are sent to AI. All replacements happen in your browser — nothing is stored or sent until you click Apply.</p>
+      </div>
+    </div>
+
+    <div class="deid-body">
+
+      <!-- Left: editable text -->
+      <div class="deid-preview-panel">
+        <div class="deid-panel-label">Research notes — edit directly or use find and replace</div>
+        <textarea id="deid-editor" class="deid-editor" spellcheck="false"
+          oninput="onDeIdEditorInput(this.value)"
+          placeholder="Your research notes will appear here…"></textarea>
+      </div>
+
+      <!-- Right: rules -->
+      <div class="deid-rules-panel">
+        <div class="deid-panel-label">Find and replace</div>
+        <p class="deid-rules-hint">Add terms to find and what to replace them with. Matching is case-insensitive and whole-word.</p>
+
+        <div id="deid-rules-list" class="deid-rules-list"></div>
+
+        <button class="toolbar-btn" onclick="addDeIdRow()" style="margin-top:8px;">+ Add row</button>
+
+        <div class="deid-privacy-note">
+          <span class="deid-privacy-icon">🔒</span>
+          <span>Replacements happen in your browser only. The cleaned text is what gets sent to AI — your original file is never uploaded.</span>
+        </div>
+
+        <label class="deid-consent-label">
+          <input type="checkbox" id="deid-consent-checkbox" onchange="onDeIdConsentChange()" />
+          <span>I confirm I have removed all personal information from the text above before sending to AI.</span>
+        </label>
+
+        <div class="deid-actions">
+          <button class="toolbar-btn" onclick="skipDeId()">Skip - notes are already clean</button>
+          <button class="toolbar-btn primary" id="btn-deid-apply" onclick="applyDeIdAndContinue()" disabled>Apply and Continue</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     APP SHELL
+============================================================ -->
+<div id="app" style="display:none">
+
+  <!-- HEADER -->
+  <header id="app-header">
+    <div class="brand">
+      <div class="brand-icon">📋</div>
+      <div class="brand-text">
+        <h1>Project Charter Generator</h1>
+        <p>Service Design Tools · HCD</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span id="save-indicator">
+        <span id="save-dot">●</span>
+        <span id="save-text">All changes saved</span>
+      </span>
+      <button class="toolbar-btn" onclick="openSharePointModal()" title="How to save and share your work with the team" style="font-size:0.8rem;padding:4px 10px;">
+        ℹ️ How to save
+      </button>
+    </div>
+  </header>
+
+  <!-- TOOLBAR -->
+  <div id="toolbar">
+    <div id="progress-container">
+      <div id="progress-label">
+        <span>Charter completion</span>
+        <span id="progress-pct">0%</span>
+      </div>
+      <div id="progress-bar-track">
+        <div id="progress-bar-fill"></div>
+      </div>
+    </div>
+
+    <button class="toolbar-btn" onclick="importJSON()" title="Restore from a previously exported JSON file">
+      📂 Import
+    </button>
+    <button class="toolbar-btn" onclick="exportJSON()" title="Save all form data as JSON backup">
+      💾 Export JSON
+    </button>
+    <button class="toolbar-btn danger" onclick="confirmClear()">
+      🗑️ Clear All
+    </button>
+    <button class="toolbar-btn success" onclick="exportPPTX()">
+      📊 Export PPTX
+    </button>
+    <button class="toolbar-btn primary" onclick="exportPDF()">
+      🖨️ Print / PDF
+    </button>
+
+    <!-- AI controls -->
+    <span class="toolbar-divider"></span>
+    <span id="md-file-indicator" class="md-indicator"></span>
+    <label class="toolbar-btn" title="Import research notes (.md or .txt file)">
+      📄 Import notes
+      <input type="file" accept=".md,.txt" style="display:none"
+        onchange="importMarkdownForCharter(this.files[0]); this.value=''" />
+    </label>
+    <button class="toolbar-btn" id="btn-ai-setup-toggle" onclick="toggleAiSetup()" title="Configure AI gateway settings">
+      ⚙️ AI Setup
+    </button>
+    <button class="toolbar-btn primary" id="btn-ai-generate" onclick="openAiDialog()" title="Use AI to fill charter sections from imported research notes">
+      ✨ AI Generate
+    </button>
+  </div>
+
+  <!-- AI SETUP PANEL (collapsible, below toolbar) -->
+  <div id="ai-setup-panel">
+    <div class="ai-setup-inner">
+
+      <div class="ai-setup-group">
+        <label class="ai-setup-label">API Endpoint URL</label>
+        <input type="url" id="ai-endpoint" class="field-input ai-setup-input"
+          placeholder="https://api.anthropic.com"
+          oninput="saveApiCredentials(this.value, undefined, undefined)" />
+        <span class="ai-setup-hint">Claude API Gateway URL (without trailing slash)</span>
+      </div>
+
+      <div class="ai-setup-group">
+        <label class="ai-setup-label">API Key</label>
+        <input type="password" id="ai-key" class="field-input ai-setup-input"
+          placeholder="sk-…"
+          oninput="saveApiCredentials(undefined, this.value, undefined)" />
+      </div>
+
+      <div class="ai-setup-group">
+        <label class="ai-setup-label">Model</label>
+        <div class="ai-setup-model-row">
+          <input type="text" id="ai-model-input" class="field-input ai-setup-input"
+            placeholder="claude-sonnet-4-6"
+            oninput="saveApiCredentials(undefined, undefined, this.value)" />
+          <button class="toolbar-btn" onclick="testAndLoadModels()" id="btn-test-conn">
+            Test Connection
+          </button>
+        </div>
+        <div id="model-list" class="model-list"></div>
+        <div id="conn-status" class="conn-status"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FORM CONTAINER — sections injected by JS -->
+  <main id="form-container">
+    <!-- Sections 1–10 will be rendered here by JavaScript -->
+    <div id="sections-placeholder" style="padding:40px;text-align:center;color:var(--grey-400);">
+      <p style="font-size:1.1rem;">⏳ Loading form sections…</p>
+    </div>
+  </main>
+
+  <!-- PREVIEW PANEL -->
+  <aside id="preview-panel">
+    <div id="preview-header">
+      <h3>📄 Live Preview</h3>
+      <span class="badge badge-blue">Updates as you type</span>
+    </div>
+    <div id="preview-content">
+      <div class="charter-preview" id="charter-preview">
+        <!-- Rendered by renderPreview() -->
+        <div class="cp-header">
+          <h2 class="cp-placeholder">Project name will appear here…</h2>
+          <p class="cp-placeholder">Version · Status · Author · Date</p>
+        </div>
+        <div class="cp-sponsors">
+          <div><strong>Project Sponsor:</strong> <span class="cp-placeholder">—</span></div>
+          <div><strong>Executive Sponsors:</strong> <span class="cp-placeholder">—</span></div>
+        </div>
+        <div class="cp-team cp-placeholder">Team members will appear here…</div>
+        <div class="cp-section">
+          <div class="cp-section-title">Problem Statement</div>
+          <div class="cp-section-body cp-placeholder">HMW question will appear here…</div>
+        </div>
+        <div class="cp-section">
+          <div class="cp-section-title">Strategic Objective</div>
+          <div class="cp-section-body cp-placeholder">Strategic objective will appear here…</div>
+        </div>
+        <div class="cp-section">
+          <div class="cp-grid">
+            <div>
+              <div class="cp-section-title" style="margin:-8px -14px 8px;">Success Measures</div>
+              <span class="cp-placeholder">Measures will appear here…</span>
+            </div>
+            <div>
+              <div class="cp-section-title" style="margin:-8px -14px 8px;">Scope</div>
+              <span class="cp-placeholder">Scope will appear here…</span>
+            </div>
+          </div>
+        </div>
+        <div class="cp-section">
+          <div class="cp-section-title">Dependencies &amp; Stakeholders</div>
+          <div class="cp-section-body cp-placeholder">Dependencies will appear here…</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+</div><!-- /#app -->
+
+<!-- Hidden file input for JSON import -->
+<input type="file" id="json-file-input" accept=".json" class="hidden" onchange="handleJSONImport(event)" />
+
+<!-- PptxGenJS — vendored locally so the tool works offline -->
+<script src="lib/pptxgen.bundle.js"></script>
+
+<!-- App scripts (load order matters) -->
+<script src="js/state.js"></script>
+<script src="js/api.js"></script>
+<script src="js/prompts.js"></script>
+<script src="js/deidentify.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/copy-prompt.js"></script>
+<script src="js/fields.js"></script>
+<script src="js/section-builders.js"></script>
+<script src="js/gap-warnings.js"></script>
+<script src="js/sections.js"></script>
+<script src="js/export-pptx.js"></script>
+<script src="js/export-pdf.js"></script>
+<script src="js/app.js"></script>
+
+<footer class="site-footer">
+  HCD Tools · Built with Claude · Personal project
+</footer>
+
+</body>
+</html>
